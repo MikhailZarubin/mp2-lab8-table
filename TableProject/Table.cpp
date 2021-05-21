@@ -18,3 +18,13 @@ TVal TRecord::GetVal()const
 {
 	return Val;
 }
+bool TRecord:: operator == (const TRecord& rec) const
+{
+	return (Key == rec.GetKey() && Val == rec.GetVal());
+}
+TRecord& TRecord::operator =(const TRecord& rec)
+{
+	Key = rec.GetKey();
+	Val = rec.GetVal();
+	return *this;
+}
