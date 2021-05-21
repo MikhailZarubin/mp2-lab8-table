@@ -49,3 +49,42 @@ void TTable::Print()
 	for (Reset(); !IsEnd(); GoNext())
 		std::cout << '[' << tmp.GetKey() << ']' << tmp.GetVal() << ' ';
 }
+TArrayTable::TArrayTable(int s):TTable()
+{
+	size = s;
+	curr = 0;
+	pRec = std::make_unique<TRecord[]>(size);
+}
+TArrayTable::TArrayTable(const TArrayTable& t)
+{
+	size = t.size;
+	curr = t.curr;
+	pRec = std::make_unique<TRecord[]>(size);
+	for (Reset(); !IsEnd(); GoNext())
+		pRec[curr] = t.pRec[curr];
+}
+void TArrayTable::Reset()
+{
+	curr = 0;
+}
+void TArrayTable::GoNext()
+{
+	curr++;
+}
+bool TArrayTable::IsEnd()
+{
+	return curr == size;
+}
+TArrayTable& TArrayTable::operator=(const TArrayTable& t)
+{
+	size = t.size;
+	curr = t.curr;
+	pRec = std::make_unique<TRecord[]>(size);
+	for (Reset(); !IsEnd(); GoNext())
+		pRec[curr] = t.pRec[curr];
+	return *this;
+}
+TRecord TArrayTable::GetCurr()
+{
+	return pRec[curr];
+}

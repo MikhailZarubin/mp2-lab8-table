@@ -23,8 +23,8 @@ protected:
 public:
 	TTable();
 	bool IsEmpty() const;
-	virtual bool Find(TKey k) = 0;
 	virtual bool IsFull() const = 0;
+	virtual bool Find(TKey k) = 0;
 	virtual bool Delete(TKey key) = 0;
 	virtual bool Insert(const TRecord& rec) = 0;
 	virtual void Reset() = 0;
@@ -34,5 +34,19 @@ public:
     void Print();
 	int GetEff() const;
 	void ClearEff();
+};
+class TArrayTable :public TTable {
+protected:
+	std::unique_ptr<TRecord[]> pRec;
+	std::size_t size, curr;
+public:
+	TArrayTable(int s = 100);
+	TArrayTable(const TArrayTable& t);
+	~TArrayTable() = default;
+	TArrayTable& operator=(const TArrayTable& t);
+	void Reset() override;
+	void GoNext() override;
+	bool IsEnd() override;
+	TRecord GetCurr() override;
 };
 
