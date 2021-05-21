@@ -88,3 +88,45 @@ TRecord TArrayTable::GetCurr()
 {
 	return pRec[curr];
 }
+TScamTable::TScamTable(int s) :TArrayTable(s)
+{}
+TScamTable::TScamTable(const TScamTable& t):TArrayTable(t)
+{}
+bool TScamTable::Find(const TKey& key)
+{
+	bool fl(false);
+	curr = DataCount;
+	for (std::size_t i = 0; i < DataCount; i++)
+	{
+		Eff++;
+		if (pRec[i].GetKey() == key)
+		{
+			fl = true;
+			curr = i;
+			break;
+		}
+	}
+	return fl;
+}
+bool TScamTable::Insert(const TRecord& rec)
+{
+	if (!this->Find(rec.GetKey()))
+	{
+		TRecord tmp(rec.GetKey(), rec.GetVal());
+		pRec[curr] = tmp;
+		DataCount++;
+		Eff++;
+		return true;
+	}
+	return false;
+}
+bool TScamTable::Delete(const TKey& key)
+{
+	if (this->Find(key))
+	{
+		pRec[curr] = pRec[--DataCount];
+		Eff++;
+		return true;
+	}
+	return false;
+}

@@ -24,8 +24,8 @@ public:
 	TTable();
 	bool IsEmpty() const;
 	virtual bool IsFull() const = 0;
-	virtual bool Find(TKey k) = 0;
-	virtual bool Delete(TKey key) = 0;
+	virtual bool Find(const TKey& k) = 0;
+	virtual bool Delete(const TKey& key) = 0;
 	virtual bool Insert(const TRecord& rec) = 0;
 	virtual void Reset() = 0;
 	virtual void GoNext() = 0;
@@ -48,5 +48,13 @@ public:
 	void GoNext() override;
 	bool IsEnd() override;
 	TRecord GetCurr() override;
+};
+class TScamTable :public TArrayTable {
+public:
+	TScamTable(int s = 100);
+	TScamTable(const TScamTable& t);
+	bool Find(const TKey& key) override;
+	bool Insert(const TRecord& rec) override;
+	bool Delete(const TKey& key) override;
 };
 
