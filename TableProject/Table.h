@@ -18,6 +18,21 @@ public:
 
 class TTable
 {
-
+protected:
+	int DataCount, Eff;
+public:
+	TTable();
+	bool IsEmpty() const;
+	virtual bool Find(TKey k) = 0;
+	virtual bool IsFull() const = 0;
+	virtual bool Delete(TKey key) = 0;
+	virtual bool Insert(const TRecord& rec) = 0;
+	virtual void Reset() = 0;
+	virtual void GoNext() = 0;
+	virtual bool IsEnd() = 0;
+	virtual TRecord GetCurr() = 0;
+    void Print();
+	int GetEff() const;
+	void ClearEff();
 };
 

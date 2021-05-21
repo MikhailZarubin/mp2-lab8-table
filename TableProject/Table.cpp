@@ -28,3 +28,24 @@ TRecord& TRecord::operator =(const TRecord& rec)
 	Val = rec.GetVal();
 	return *this;
 }
+TTable::TTable() :Eff(), DataCount() {
+
+}
+bool TTable::IsEmpty()const
+{
+	return DataCount == 0;
+}
+int TTable::GetEff()const
+{
+	return Eff;
+}
+void TTable::ClearEff()
+{
+	Eff = 0;
+}
+void TTable::Print()
+{
+	TRecord tmp = this->GetCurr();
+	for (Reset(); !IsEnd(); GoNext())
+		std::cout << '[' << tmp.GetKey() << ']' << tmp.GetVal() << ' ';
+}
