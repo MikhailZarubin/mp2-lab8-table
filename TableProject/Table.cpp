@@ -88,6 +88,10 @@ TRecord TArrayTable::GetCurr()
 {
 	return pRec[curr];
 }
+bool TArrayTable::IsFull() const
+{
+	return DataCount == size;
+}
 TScamTable::TScamTable(int s) :TArrayTable(s)
 {}
 TScamTable::TScamTable(const TScamTable& t):TArrayTable(t)
@@ -110,6 +114,8 @@ bool TScamTable::Find(const TKey& key)
 }
 bool TScamTable::Insert(const TRecord& rec)
 {
+	if (IsFull())
+		throw size;
 	if (!this->Find(rec.GetKey()))
 	{
 		TRecord tmp(rec.GetKey(), rec.GetVal());
@@ -122,6 +128,8 @@ bool TScamTable::Insert(const TRecord& rec)
 }
 bool TScamTable::Delete(const TKey& key)
 {
+	if (IsEmpty())
+		throw 0;
 	if (this->Find(key))
 	{
 		pRec[curr] = pRec[--DataCount];

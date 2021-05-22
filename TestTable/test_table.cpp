@@ -60,3 +60,86 @@ TEST(Record, the_records_after_the_assignment_are_the_same)
 	r1 = r2;
 	EXPECT_EQ(r1 == r2, true);
 }
+TEST(ScamTable, can_create_ScamTable)
+{
+	ASSERT_NO_THROW(TScamTable t);
+}
+TEST(ScamTable, can_copy_ScamTable)
+{
+	TScamTable copy;
+	ASSERT_NO_THROW(TScamTable t(copy));
+}
+TEST(ScamTable, can_insert_record_in_no_full_ScamTable)
+{
+	TScamTable t;
+	TRecord r;
+	ASSERT_NO_THROW(t.Insert(r));
+}
+TEST(ScamTable, can_find_record_in_ScamTable)
+{
+	TScamTable t;
+	TRecord r;
+	ASSERT_NO_THROW(t.Find(r.GetKey()));
+}
+TEST(ScamTable, can_delete_record_in_no_empty_ScamTable)
+{
+	TScamTable t;
+	TRecord r;
+	t.Insert(r);
+	ASSERT_NO_THROW(t.Delete(r.GetKey()));
+}
+TEST(ScamTable, can_not_insert_in_full_ScamTable)
+{
+	TScamTable t(1);
+	TRecord r;
+	t.Insert(r);
+	ASSERT_ANY_THROW(t.Insert(r));
+}
+TEST(ScamTable, can_not_delete_in_empty_ScamTable)
+{
+	TScamTable t;
+	TRecord r;
+	ASSERT_ANY_THROW(t.Delete(r.GetKey()));
+}
+
+TEST(ScamTable, find_for_an_existing_record_will_return_the_true)
+{
+	TScamTable t;
+	TRecord r;
+	t.Insert(r);
+	EXPECT_EQ(t.Find(r.GetKey()), true);
+}
+TEST(ScamTable, find_for_a_nonexistent_record_will_return_the_false)
+{
+	TScamTable t;
+	TRecord r;;
+	EXPECT_EQ(t.Find(r.GetKey()), false);
+}
+TEST(ScamTable, insert_a_nonexistent_record_will_return_the_true)
+{
+	TScamTable t;
+	TRecord r;
+	EXPECT_EQ(t.Insert(r), true);
+}
+TEST(ScamTable, insert_an_existing_record_will_return_the_false)
+{
+	TScamTable t;
+	TRecord r;
+	t.Insert(r);
+	EXPECT_EQ(t.Insert(r), false);
+}
+TEST(ScamTable, delete_an_existing_record_will_return_the_true)
+{
+	TScamTable t;
+	TRecord r;
+	t.Insert(r);
+	EXPECT_EQ(t.Delete(r.GetKey()), true);
+}
+TEST(ScamTable, delete_a_nonexistent_record_will_return_the_false)
+{
+	TScamTable t;
+	TRecord r, r1(5, 6);
+	t.Insert(r);
+	EXPECT_EQ(t.Delete(r1.GetKey()), false);
+}
+

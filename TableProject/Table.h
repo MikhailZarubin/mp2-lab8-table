@@ -3,6 +3,7 @@
 
 typedef int TKey;
 typedef int TVal;
+
 class TRecord {
 protected:
 	TKey Key;
@@ -19,7 +20,7 @@ public:
 class TTable
 {
 protected:
-	int DataCount, Eff;
+	std::size_t DataCount, Eff;
 public:
 	TTable();
 	bool IsEmpty() const;
@@ -47,6 +48,7 @@ public:
 	void Reset() override;
 	void GoNext() override;
 	bool IsEnd() override;
+	bool IsFull()const override;
 	TRecord GetCurr() override;
 };
 class TScamTable :public TArrayTable {
