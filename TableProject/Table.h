@@ -4,6 +4,8 @@
 typedef int TKey;
 typedef int TVal;
 
+const int FREE = -1;
+const int DELETE = -1;
 class TRecord {
 protected:
 	TKey Key;
@@ -60,3 +62,22 @@ public:
 	bool Delete(const TKey& key) override;
 };
 
+class THashTableStep : public TTable
+{
+protected:
+	std::size_t curr, MaxSize;
+	int Step;
+	std::unique_ptr<std::pair<TRecord, int>[]> array;
+	std::size_t HashFunc(const TKey& key);
+public:
+	THashTableStep(std::size_t max = 100, int st = 3);
+	~THashTableStep() = default;
+	void Reset() override;
+	void GoNext() override;
+	bool IsEnd() override;
+	bool IsFull()const override;
+	TRecord GetCurr() override;
+	bool Find(const TKey& key) override;
+	bool Insert(const TRecord& rec) override;
+	bool Delete(const TKey& key) override;
+};

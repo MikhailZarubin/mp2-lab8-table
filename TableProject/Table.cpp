@@ -138,3 +138,79 @@ bool TScamTable::Delete(const TKey& key)
 	}
 	return false;
 }
+THashTableStep::THashTableStep(std::size_t max, int st):TTable()
+{
+	MaxSize = max;
+	Step = st;
+	array = std::make_unique<std::pair<TRecord, int>[]>(MaxSize);
+}
+void THashTableStep::Reset()
+{
+	for (curr = 0; curr < MaxSize; curr++)
+	{
+		if (array[curr].second != FREE && array[curr].second != DELETE)
+			break;
+	}
+}
+void THashTableStep::GoNext()
+{
+	for (curr = curr+1; curr < MaxSize; curr++)
+	{
+		if (array[curr].second != FREE && array[curr].second != DELETE)
+			break;
+	}
+}
+bool THashTableStep::IsEnd()
+{
+	return curr == MaxSize;
+}
+bool THashTableStep::Find(const TKey& key)
+{
+	std::size_t pos = HashFunc(key);
+	int DelPos = -1;
+	for (int i = 0; i < MaxSize; i++)
+	{
+		Eff++;
+		if (array[i].first.GetKey() == key)
+			return true;
+		else if (array[i].second == FREE)
+			break;
+		else if (array[i].second == DELETE && DelPos == -1)
+			DelPos = curr;
+		curr += Step;
+	}
+	if (DelPos != -1)
+		curr = DelPos;
+	return false;
+}
+bool THashTableStep::Insert(const TRecord& rec)
+{
+	if (IsFull())
+		throw MaxSize;
+	if (!Find(rec.GetKey()))
+	{
+		TRecord tmp;
+		array[curr].first = tmp;
+		DataCount++;
+		Eff++;
+		return true;
+	}
+	return false;
+}
+bool THashTableStep::Delete(const TKey& key)
+{
+	if (IsEmpty())
+		throw 0;
+	if (Find(key))
+	{
+		array[curr].second = DELETE;
+		DataCount--;
+		Eff++;
+		return true;
+	}
+	return false;
+}
+bool THashTableStep::IsFull() const
+{
+	return DataCount == MaxSize;
+}
