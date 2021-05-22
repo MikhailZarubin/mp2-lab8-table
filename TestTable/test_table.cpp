@@ -69,6 +69,11 @@ TEST(ScamTable, can_copy_ScamTable)
 	TScamTable copy;
 	ASSERT_NO_THROW(TScamTable t(copy));
 }
+TEST(ScamTable, can_assign_table)
+{
+	TScamTable t1(1), t2(2), t3(3);
+	ASSERT_NO_THROW(t1 = t2 = t3);
+}
 TEST(ScamTable, can_insert_record_in_no_full_ScamTable)
 {
 	TScamTable t;
@@ -102,44 +107,138 @@ TEST(ScamTable, can_not_delete_in_empty_ScamTable)
 	ASSERT_ANY_THROW(t.Delete(r.GetKey()));
 }
 
-TEST(ScamTable, find_for_an_existing_record_will_return_the_true)
+TEST(ScamTable, find_for_an_existing_record_in_ScamTable_will_return_the_true)
 {
 	TScamTable t;
 	TRecord r;
 	t.Insert(r);
 	EXPECT_EQ(t.Find(r.GetKey()), true);
 }
-TEST(ScamTable, find_for_a_nonexistent_record_will_return_the_false)
+TEST(ScamTable, find_for_a_nonexistent_record_in_ScamTable_will_return_the_false)
 {
 	TScamTable t;
 	TRecord r;;
 	EXPECT_EQ(t.Find(r.GetKey()), false);
 }
-TEST(ScamTable, insert_a_nonexistent_record_will_return_the_true)
+TEST(ScamTable, insert_a_nonexistent_record_in_ScamTable_will_return_the_true)
 {
 	TScamTable t;
 	TRecord r;
 	EXPECT_EQ(t.Insert(r), true);
 }
-TEST(ScamTable, insert_an_existing_record_will_return_the_false)
+TEST(ScamTable, insert_an_existing_record_in_ScamTable_will_return_the_false)
 {
 	TScamTable t;
 	TRecord r;
 	t.Insert(r);
 	EXPECT_EQ(t.Insert(r), false);
 }
-TEST(ScamTable, delete_an_existing_record_will_return_the_true)
+TEST(ScamTable, delete_an_existing_record_in_ScamTable_will_return_the_true)
 {
 	TScamTable t;
 	TRecord r;
 	t.Insert(r);
 	EXPECT_EQ(t.Delete(r.GetKey()), true);
 }
-TEST(ScamTable, delete_a_nonexistent_record_will_return_the_false)
+TEST(ScamTable, delete_a_nonexistent_record_in_ScamTable_will_return_the_false)
 {
 	TScamTable t;
 	TRecord r, r1(5, 6);
 	t.Insert(r);
 	EXPECT_EQ(t.Delete(r1.GetKey()), false);
 }
+TEST(HashTableStep, can_create_table)
+{
+	ASSERT_NO_THROW(THashTableStep t);
+}
+TEST(HashTableStep, can_not_create_table_with_zero_size)
+{
+	ASSERT_ANY_THROW(THashTableStep t(0));
+}
+TEST(HashTableStep, can_not_create_table_with_a_multiple_of_the_size_of_the_step)
+{
+	ASSERT_ANY_THROW(THashTableStep t(100,10));
+}
+TEST(HashTableStep, can_copy_table)
+{
+	THashTableStep t;
+	ASSERT_NO_THROW(THashTableStep copy(t));
+}
+TEST(HashTableStep, can_assign_table)
+{
+	THashTableStep t1, t2;
+	ASSERT_NO_THROW(t1 = t2);
+}
+TEST(HashTableStep, can_insert_record_in_no_full_HashTableStep)
+{
+	THashTableStep t;
+	TRecord r;
+	ASSERT_NO_THROW(t.Insert(r));
+}
+TEST(HashTableStep, can_find_record_in_HashTableStep)
+{
+	THashTableStep t;
+	TRecord r;
+	ASSERT_NO_THROW(t.Find(r.GetKey()));
+}
+TEST(HashTableStep, can_delete_record_in_no_empty_HashTableStep)
+{
+	THashTableStep t;
+	TRecord r;
+	t.Insert(r);
+	ASSERT_NO_THROW(t.Delete(r.GetKey()));
+}
+TEST(HashTableStep, can_not_insert_in_full_HashTableStep)
+{
+	THashTableStep t(1);
+	TRecord r;
+	t.Insert(r);
+	ASSERT_ANY_THROW(t.Insert(r));
+}
+TEST(HashTableStep, can_not_delete_in_empty_HashTableStep)
+{
+	THashTableStep t;
+	TRecord r;
+	ASSERT_ANY_THROW(t.Delete(r.GetKey()));
+}
 
+TEST(HashTableStep, find_for_an_existing_record_in_HashTableStep_will_return_the_true)
+{
+	THashTableStep t;
+	TRecord r;
+	t.Insert(r);
+	EXPECT_EQ(t.Find(r.GetKey()), true);
+}
+TEST(HashTableStep, find_for_a_nonexistent_record_in_HashTableStep_will_return_the_false)
+{
+	THashTableStep t;
+	TRecord r;;
+	EXPECT_EQ(t.Find(r.GetKey()), false);
+}
+TEST(HashTableStep, insert_a_nonexistent_record_in_HashTableStep_will_return_the_true)
+{
+	THashTableStep t;
+	TRecord r;
+	EXPECT_EQ(t.Insert(r), true);
+}
+TEST(HashTableStep, insert_an_existing_record_in_HashTableStep_will_return_the_false)
+{
+	THashTableStep t;
+	TRecord r;
+	t.Insert(r);
+	EXPECT_EQ(t.Insert(r), false);
+}
+TEST(HashTableStep, delete_an_existing_record_in_HashTableStep_will_return_the_true)
+{
+	THashTableStep t;
+	TRecord r;
+	t.Insert(r);
+	EXPECT_EQ(t.Delete(r.GetKey()), true);
+}
+TEST(HashTableStep, delete_a_nonexistent_record_in_HashTableStep_will_return_the_false)
+{
+	THashTableStep t;
+	TRecord r, r1(5, 6);
+	t.Insert(r);
+	EXPECT_EQ(t.Delete(r1.GetKey()), false);
+}

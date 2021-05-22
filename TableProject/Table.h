@@ -5,7 +5,7 @@ typedef int TKey;
 typedef int TVal;
 
 const int FREE = -1;
-const int DELETE = -1;
+const int DELETE = -2;
 class TRecord {
 protected:
 	TKey Key;
@@ -43,7 +43,7 @@ protected:
 	std::unique_ptr<TRecord[]> pRec;
 	std::size_t size, curr;
 public:
-	TArrayTable(int s = 100);
+	TArrayTable(std::size_t s = 100);
 	TArrayTable(const TArrayTable& t);
 	~TArrayTable() = default;
 	TArrayTable& operator=(const TArrayTable& t);
@@ -55,7 +55,7 @@ public:
 };
 class TScamTable :public TArrayTable {
 public:
-	TScamTable(int s = 100);
+	TScamTable(std::size_t s = 100);
 	TScamTable(const TScamTable& t);
 	bool Find(const TKey& key) override;
 	bool Insert(const TRecord& rec) override;
@@ -71,11 +71,13 @@ protected:
 	std::size_t HashFunc(const TKey& key);
 public:
 	THashTableStep(std::size_t max = 100, int st = 3);
+	THashTableStep(const THashTableStep& table);
 	~THashTableStep() = default;
 	void Reset() override;
 	void GoNext() override;
 	bool IsEnd() override;
 	bool IsFull()const override;
+	THashTableStep& operator = (const THashTableStep& table);
 	TRecord GetCurr() override;
 	bool Find(const TKey& key) override;
 	bool Insert(const TRecord& rec) override;

@@ -45,12 +45,17 @@ void TTable::ClearEff()
 }
 void TTable::Print()
 {
-	TRecord tmp = this->GetCurr();
+	TRecord tmp;
 	for (Reset(); !IsEnd(); GoNext())
+	{
+		tmp = this->GetCurr();
 		std::cout << '[' << tmp.GetKey() << ']' << tmp.GetVal() << ' ';
+	}
 }
-TArrayTable::TArrayTable(int s):TTable()
+TArrayTable::TArrayTable(std::size_t s):TTable()
 {
+	if (s == 0)
+		throw 0;
 	size = s;
 	curr = 0;
 	pRec = std::make_unique<TRecord[]>(size);
@@ -73,14 +78,15 @@ void TArrayTable::GoNext()
 }
 bool TArrayTable::IsEnd()
 {
-	return curr == size;
+	return curr == DataCount;
 }
 TArrayTable& TArrayTable::operator=(const TArrayTable& t)
 {
+	DataCount = t.DataCount;
 	size = t.size;
 	curr = t.curr;
 	pRec = std::make_unique<TRecord[]>(size);
-	for (Reset(); !IsEnd(); GoNext())
+	for (Reset();!IsEnd();GoNext())
 		pRec[curr] = t.pRec[curr];
 	return *this;
 }
@@ -92,7 +98,7 @@ bool TArrayTable::IsFull() const
 {
 	return DataCount == size;
 }
-TScamTable::TScamTable(int s) :TArrayTable(s)
+TScamTable::TScamTable(size_t s) :TArrayTable(s)
 {}
 TScamTable::TScamTable(const TScamTable& t):TArrayTable(t)
 {}
@@ -140,9 +146,40 @@ bool TScamTable::Delete(const TKey& key)
 }
 THashTableStep::THashTableStep(std::size_t max, int st):TTable()
 {
+	if (max == 0)
+		throw 0;
+	if (st == 0 || max % st == 0)
+		throw st;
 	MaxSize = max;
 	Step = st;
 	array = std::make_unique<std::pair<TRecord, int>[]>(MaxSize);
+	for (std::size_t i = 0; i < MaxSize; i++)
+		array[i].second = FREE;
+}
+THashTableStep::THashTableStep(const THashTableStep& t)
+{
+	DataCount = t.DataCount;
+	MaxSize = t.MaxSize;
+	Step = t.Step;
+	array = std::make_unique<std::pair<TRecord, int>[]>(MaxSize);
+	for (std::size_t i = 0; i < MaxSize; i++)
+	{
+		if (t.array[i].second != FREE)
+			array[i].first = t.array[i].first;
+		array[i].second = t.array[i].second;
+	}
+}
+THashTableStep& THashTableStep:: operator =(const THashTableStep& t) {
+	MaxSize = t.MaxSize;
+	Step = t.Step;
+	array = std::make_unique<std::pair<TRecord, int>[]>(MaxSize);
+	for (std::size_t i = 0; i < MaxSize; i++)
+	{
+		if (t.array[i].second != FREE)
+			array[i].first = t.array[i].first;
+		array[i].second = t.array[i].second;
+	}
+	return *this;
 }
 void THashTableStep::Reset()
 {
@@ -166,18 +203,18 @@ bool THashTableStep::IsEnd()
 }
 bool THashTableStep::Find(const TKey& key)
 {
-	std::size_t pos = HashFunc(key);
+	curr = HashFunc(key);
 	int DelPos = -1;
-	for (int i = 0; i < MaxSize; i++)
+	for (std::size_t i = 0; i < MaxSize; i++)
 	{
 		Eff++;
-		if (array[i].first.GetKey() == key)
+		if (array[curr].first.GetKey() == key)
 			return true;
-		else if (array[i].second == FREE)
+		else if (array[curr].second == FREE)
 			break;
-		else if (array[i].second == DELETE && DelPos == -1)
+		else if (array[curr].second == DELETE && DelPos == -1)
 			DelPos = curr;
-		curr += Step;
+		curr = (curr + Step) % MaxSize;
 	}
 	if (DelPos != -1)
 		curr = DelPos;
@@ -191,6 +228,7 @@ bool THashTableStep::Insert(const TRecord& rec)
 	{
 		TRecord tmp;
 		array[curr].first = tmp;
+		array[curr].second = 0;
 		DataCount++;
 		Eff++;
 		return true;
@@ -213,4 +251,12 @@ bool THashTableStep::Delete(const TKey& key)
 bool THashTableStep::IsFull() const
 {
 	return DataCount == MaxSize;
+}
+std::size_t THashTableStep::HashFunc(const TKey& key)
+{
+	return (std::size_t)(key % MaxSize);
+}
+TRecord THashTableStep::GetCurr()
+{
+	return array[curr].first;
 }
