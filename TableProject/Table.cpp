@@ -117,7 +117,7 @@ bool TScamTable::Find(const TKey& key)
 {
 	bool fl(false);
 	curr = DataCount;
-	for (std::size_t i = 0; i < DataCount; i++)
+	for (int i = 0; i < DataCount; i++)
 	{
 		Eff++;
 		if (pRec[i].GetKey() == key)
@@ -297,8 +297,9 @@ THashTableList::THashTableList(std::size_t s)
 	current_position = 0;
 	found_now = 0;
 	curr = NULL;
+	prev = NULL;
 	array = new THashList* [MaxSize];
-	for (int i = 0; i < MaxSize; i++)
+	for (std::size_t i = 0; i < MaxSize; i++)
 		array[i] = NULL;
 }
 THashTableList::THashTableList(const THashTableList& t)
@@ -308,7 +309,7 @@ THashTableList::THashTableList(const THashTableList& t)
 	current_position = 0;
 	curr = NULL;
 	array = new THashList * [MaxSize];
-	for (int i = 0; i < MaxSize; i++)
+	for (std::size_t i = 0; i < MaxSize; i++)
 	{
 		Eff++;
 		if (t.array[i] == NULL)
@@ -335,7 +336,7 @@ THashTableList::THashTableList(const THashTableList& t)
 THashTableList::~THashTableList()
 {
 	THashList* tmp;
-	for (int i = 0; i < MaxSize; i++)
+	for (std::size_t i = 0; i < MaxSize; i++)
 	{
 		Eff++;
 		curr = array[i];
@@ -355,7 +356,7 @@ THashTableList& THashTableList::operator=(const THashTableList& t)
 	if (&t != this)
 	{
 		THashList* tmp;
-		for (int i = 0; i < MaxSize; i++)
+		for (std::size_t i = 0; i < MaxSize; i++)
 		{
 			Eff++;
 			curr = array[i];
@@ -372,7 +373,7 @@ THashTableList& THashTableList::operator=(const THashTableList& t)
 		MaxSize = t.MaxSize;
 		curr = NULL;
 		array = new THashList * [MaxSize];
-		for (int i = 0; i < MaxSize; i++)
+		for (std::size_t i = 0; i < MaxSize; i++)
 		{
 			Eff++;
 			if (t.array[i] == NULL)
@@ -402,7 +403,7 @@ void THashTableList::Reset()
 {
 	if (DataCount == 0)
 		throw 0;
-	for (int i = 0; i < MaxSize; i++)
+	for (std::size_t i = 0; i < MaxSize; i++)
 	{
 		Eff++;
 		curr = array[i];
