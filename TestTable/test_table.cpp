@@ -242,3 +242,31 @@ TEST(HashTableStep, delete_a_nonexistent_record_in_HashTableStep_will_return_the
 	t.Insert(r);
 	EXPECT_EQ(t.Delete(r1.GetKey()), false);
 }
+TEST(HashTableList, can_create_HashTableList)
+{
+	ASSERT_NO_THROW(THashTableList t);
+}
+TEST(HashTableList, can_copy_empty_HashTableList)
+{
+	THashTableList copy;
+	ASSERT_NO_THROW(THashTableList t(copy));
+}
+TEST(HashTableList, can_copy_no_empty_HashTableList)
+{
+	THashTableList copy;
+	TRecord rec(5, 6);
+	copy.Insert(rec);
+	ASSERT_NO_THROW(THashTableList t(copy));
+}
+TEST(HashTableList, can_assign_mpty_HashTableList)
+{
+	THashTableList copy, t1, t2;
+	ASSERT_NO_THROW(t1 = t2 = copy);
+}
+TEST(HashTableList, can_assign_no_empty_HashTableList)
+{
+		THashTableList copy, t1, t2;
+		TRecord rec(5, 6);
+		copy.Insert(rec);
+		ASSERT_NO_THROW(t1 = t2 = copy);
+}

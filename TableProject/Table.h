@@ -4,6 +4,7 @@
 typedef int TKey;
 typedef int TVal;
 
+const int OCCUP = 0;
 const int FREE = -1;
 const int DELETE = -2;
 class TRecord {
@@ -18,11 +19,21 @@ public:
 	bool operator == (const TRecord& rec) const;
 	TRecord& operator = (const TRecord& rec);
 };
+class THashList
+{
+protected:
+	TRecord rec;
+public:
+	THashList();
+	THashList(TRecord r, THashList* p);
+	THashList* pNext;
+	TRecord GetRec() const;
+};
 
 class TTable
 {
 protected:
-	std::size_t DataCount, Eff;
+	int DataCount, Eff;
 public:
 	TTable();
 	bool IsEmpty() const;
@@ -36,6 +47,7 @@ public:
 	virtual TRecord GetCurr() = 0;
     void Print();
 	int GetEff() const;
+	int GetData() const;
 	void ClearEff();
 };
 class TArrayTable :public TTable {
@@ -78,6 +90,28 @@ public:
 	bool IsEnd() override;
 	bool IsFull()const override;
 	THashTableStep& operator = (const THashTableStep& table);
+	TRecord GetCurr() override;
+	bool Find(const TKey& key) override;
+	bool Insert(const TRecord& rec) override;
+	bool Delete(const TKey& key) override;
+};
+class THashTableList :public TTable
+{
+protected:
+	std::size_t MaxSize, current_position;
+	int found_now;
+	THashList* curr, *prev;
+	THashList** array;
+	std::size_t HashFunc(const TKey& k);
+public:
+	THashTableList(std::size_t max = 100);
+	THashTableList(const THashTableList& t);
+	~THashTableList();
+	THashTableList& operator = (const THashTableList& table);
+	void Reset() override;
+	void GoNext() override;
+	bool IsEnd() override;
+	bool IsFull()const override;
 	TRecord GetCurr() override;
 	bool Find(const TKey& key) override;
 	bool Insert(const TRecord& rec) override;
