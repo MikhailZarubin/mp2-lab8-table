@@ -106,46 +106,75 @@ TEST(ScamTable, can_not_delete_in_empty_ScamTable)
 	TRecord r;
 	ASSERT_ANY_THROW(t.Delete(r.GetKey()));
 }
-
+TEST(ScamTable, can_crawl_an_empty_ScamTable)
+{
+	TScamTable t;
+	ASSERT_NO_THROW(for (t.Reset(); !t.IsEnd(); t.GoNext()););
+}
+TEST(ScamTable, can_crawl_a_non_empty_ScamTable)
+{
+	TScamTable t;
+	TRecord rec1(20, 5), rec2(180, 5), rec3(50, 5);
+	t.Insert(rec1);
+	t.Insert(rec2);
+	t.Insert(rec3);
+	ASSERT_NO_THROW(for (t.Reset(); !t.IsEnd(); t.GoNext()););
+}
 TEST(ScamTable, find_for_an_existing_record_in_ScamTable_will_return_the_true)
 {
 	TScamTable t;
 	TRecord r;
 	t.Insert(r);
+	EXPECT_EQ(t.GetData(), 1);
 	EXPECT_EQ(t.Find(r.GetKey()), true);
+	EXPECT_EQ(t.GetData(), 1);
 }
 TEST(ScamTable, find_for_a_nonexistent_record_in_ScamTable_will_return_the_false)
 {
 	TScamTable t;
-	TRecord r;;
+	TRecord r;
+	EXPECT_EQ(t.GetData(), 0);
 	EXPECT_EQ(t.Find(r.GetKey()), false);
+	EXPECT_EQ(t.GetData(), 0);
 }
 TEST(ScamTable, insert_a_nonexistent_record_in_ScamTable_will_return_the_true)
 {
 	TScamTable t;
 	TRecord r;
+	EXPECT_EQ(t.GetData(), 0);
 	EXPECT_EQ(t.Insert(r), true);
+	EXPECT_EQ(t.GetData(), 1);
 }
 TEST(ScamTable, insert_an_existing_record_in_ScamTable_will_return_the_false)
 {
 	TScamTable t;
 	TRecord r;
 	t.Insert(r);
+	EXPECT_EQ(t.GetData(), 1);
 	EXPECT_EQ(t.Insert(r), false);
+	EXPECT_EQ(t.GetData(), 1);
 }
 TEST(ScamTable, delete_an_existing_record_in_ScamTable_will_return_the_true)
 {
 	TScamTable t;
 	TRecord r;
 	t.Insert(r);
+	EXPECT_EQ(t.GetData(), 1);
 	EXPECT_EQ(t.Delete(r.GetKey()), true);
+	EXPECT_EQ(t.GetData(), 0);
 }
 TEST(ScamTable, delete_a_nonexistent_record_in_ScamTable_will_return_the_false)
 {
 	TScamTable t;
 	TRecord r, r1(5, 6);
 	t.Insert(r);
+	EXPECT_EQ(t.GetData(), 1);
 	EXPECT_EQ(t.Delete(r1.GetKey()), false);
+	EXPECT_EQ(t.GetData(), 1);
+}
+TEST(SortTable, can_create_SortTable)
+{
+	ASSERT_NO_THROW(TSortTable t);
 }
 TEST(HashTableStep, can_create_table)
 {
@@ -201,50 +230,79 @@ TEST(HashTableStep, can_not_delete_in_empty_HashTableStep)
 	TRecord r;
 	ASSERT_ANY_THROW(t.Delete(r.GetKey()));
 }
-
+TEST(HashTableStep, can_crawl_an_empty_HashTableStep)
+{
+	THashTableStep t;
+	ASSERT_NO_THROW(for (t.Reset(); !t.IsEnd(); t.GoNext()););
+}
+TEST(HashTableStep, can_crawl_a_non_empty_HashTableStep)
+{
+	THashTableStep t;
+	TRecord rec1(20, 5), rec2(180, 5), rec3(50, 5);
+	t.Insert(rec1);
+	t.Insert(rec2);
+	t.Insert(rec3);
+	ASSERT_NO_THROW(for (t.Reset(); !t.IsEnd(); t.GoNext()););
+}
 TEST(HashTableStep, find_for_an_existing_record_in_HashTableStep_will_return_the_true)
 {
 	THashTableStep t;
 	TRecord r;
 	t.Insert(r);
+	EXPECT_EQ(t.GetData(), 1);
 	EXPECT_EQ(t.Find(r.GetKey()), true);
+	EXPECT_EQ(t.GetData(), 1);
 }
 TEST(HashTableStep, find_for_a_nonexistent_record_in_HashTableStep_will_return_the_false)
 {
 	THashTableStep t;
-	TRecord r;;
+	TRecord r;
+	EXPECT_EQ(t.GetData(), 0);
 	EXPECT_EQ(t.Find(r.GetKey()), false);
+	EXPECT_EQ(t.GetData(), 0);
 }
 TEST(HashTableStep, insert_a_nonexistent_record_in_HashTableStep_will_return_the_true)
 {
 	THashTableStep t;
 	TRecord r;
+	EXPECT_EQ(t.GetData(), 0);
 	EXPECT_EQ(t.Insert(r), true);
+	EXPECT_EQ(t.GetData(), 1);
 }
 TEST(HashTableStep, insert_an_existing_record_in_HashTableStep_will_return_the_false)
 {
 	THashTableStep t;
 	TRecord r;
 	t.Insert(r);
+	EXPECT_EQ(t.GetData(), 1);
 	EXPECT_EQ(t.Insert(r), false);
+	EXPECT_EQ(t.GetData(), 1);
 }
 TEST(HashTableStep, delete_an_existing_record_in_HashTableStep_will_return_the_true)
 {
 	THashTableStep t;
 	TRecord r;
 	t.Insert(r);
+	EXPECT_EQ(t.GetData(), 1);
 	EXPECT_EQ(t.Delete(r.GetKey()), true);
+	EXPECT_EQ(t.GetData(), 0);
 }
 TEST(HashTableStep, delete_a_nonexistent_record_in_HashTableStep_will_return_the_false)
 {
 	THashTableStep t;
 	TRecord r, r1(5, 6);
 	t.Insert(r);
+	EXPECT_EQ(t.GetData(), 1);
 	EXPECT_EQ(t.Delete(r1.GetKey()), false);
+	EXPECT_EQ(t.GetData(), 1);
 }
 TEST(HashTableList, can_create_HashTableList)
 {
 	ASSERT_NO_THROW(THashTableList t);
+}
+TEST(HashTableList, can_not_create_HashTableList_with_zero_size)
+{
+	ASSERT_ANY_THROW(THashTableList t(0));
 }
 TEST(HashTableList, can_copy_empty_HashTableList)
 {
@@ -269,4 +327,111 @@ TEST(HashTableList, can_assign_no_empty_HashTableList)
 		TRecord rec(5, 6);
 		copy.Insert(rec);
 		ASSERT_NO_THROW(t1 = t2 = copy);
+}
+TEST(HashTableList, can_crawl_an_empty_HashTableList)
+{
+	THashTableList t;
+	ASSERT_NO_THROW(for (t.Reset(); !t.IsEnd(); t.GoNext()););
+}
+TEST(HashTableList, can_crawl_a_non_empty_HashTableList)
+{
+	THashTableList t;
+	TRecord rec1(20, 5), rec2(180,5), rec3(50,5);
+	t.Insert(rec1);
+	t.Insert(rec2);
+	t.Insert(rec3);
+	ASSERT_NO_THROW(for (t.Reset(); !t.IsEnd(); t.GoNext()););
+}
+TEST(HashTableList, can_find_a_record_in_empty_HashTableList)
+{
+	THashTableList t;
+	TRecord rec;
+	ASSERT_NO_THROW(t.Find(rec.GetKey()));
+}
+TEST(HashTableList, can_find_a_record_in_no_empty_HashTableList)
+{
+	THashTableList t;
+	TRecord rec, rec2(1, 5);
+	t.Insert(rec);
+	ASSERT_NO_THROW(t.Find(rec2.GetKey()));
+}
+TEST(HashTableList, can_insert_a_record_in_empty_HashTableList)
+{
+	THashTableList t;
+	TRecord rec;
+	ASSERT_NO_THROW(t.Insert(rec));
+}
+TEST(HashTableList, can_insert_a_record_in_no_empty_HashTableList)
+{
+	THashTableList t;
+	TRecord rec, rec2(1,5);
+	t.Insert(rec);
+	ASSERT_NO_THROW(t.Insert(rec2));
+}
+TEST(HashTableList, can_delete_a_record_in_no_empty_HashTableList)
+{
+	THashTableList t;
+	TRecord rec;
+	t.Insert(rec);
+	ASSERT_NO_THROW(t.Delete(rec.GetKey()));
+}
+TEST(HashTableList, can_not_delete_a_record_in_empty_HashTableList)
+{
+	THashTableList t;
+	TRecord rec;
+	ASSERT_ANY_THROW(t.Delete(rec.GetKey()));
+}
+TEST(HashTableList, find_for_nonexistent_record_in_HashTableList_return_false)
+{
+	THashTableList t;
+	TRecord rec1, rec2(2, 9);
+	t.Insert(rec1);
+	EXPECT_EQ(t.GetData(), 1);
+	EXPECT_EQ(t.Find(rec2.GetKey()), false);
+	EXPECT_EQ(t.GetData(), 1);
+}
+TEST(HashTableList, find_for_an_existing_record_in_HashTableList_return_true)
+{
+	THashTableList t;
+	TRecord rec1, rec2;
+	t.Insert(rec1);
+	EXPECT_EQ(t.GetData(), 1);
+	EXPECT_EQ(t.Find(rec2.GetKey()), true);
+	EXPECT_EQ(t.GetData(), 1);
+}
+TEST(HashTableList, insert_for_nonexistent_record_in_HashTableList_return_true)
+{
+	THashTableList t;
+	TRecord rec1, rec2(2, 9);
+	t.Insert(rec1);
+	EXPECT_EQ(t.GetData(), 1);
+	EXPECT_EQ(t.Insert(rec2), true);
+	EXPECT_EQ(t.GetData(), 2);
+}
+TEST(HashTableList, insert_for_an_existing_record_in_HashTableList_return_false)
+{
+	THashTableList t;
+	TRecord rec1, rec2;
+	t.Insert(rec1);
+	EXPECT_EQ(t.GetData(), 1);
+	EXPECT_EQ(t.Insert(rec2), false);
+	EXPECT_EQ(t.GetData(), 1);
+}
+TEST(HashTableList, delete_for_nonexistent_record_in_HashTableList_return_false)
+{
+	THashTableList t;
+	TRecord rec1, rec2(2, 9);
+	t.Insert(rec1);
+	EXPECT_EQ(t.GetData(), 1);
+	EXPECT_EQ(t.Delete(rec2.GetKey()), false);
+	EXPECT_EQ(t.GetData(), 1);
+}
+TEST(HashTableList, delete_for_an_existing_record_in_HashTableList_return_true)
+{
+	THashTableList t;
+	TRecord rec1, rec2;
+	t.Insert(rec1);
+	EXPECT_EQ(t.GetData(), 1);
+	EXPECT_EQ(t.Delete(rec2.GetKey()), true);
+	EXPECT_EQ(t.GetData(), 0);
 }

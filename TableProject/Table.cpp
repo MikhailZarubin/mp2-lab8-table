@@ -10,6 +10,11 @@ void TRecord::InsRec(TKey k, TVal v)
 	Key = k;
 	Val = v;
 }
+void TRecord::InsRec(TRecord rec)
+{
+	Key = rec.Key;
+	Val = rec.Val;
+}
 TKey TRecord::GetKey()const
 {
 	return Key;
@@ -67,15 +72,20 @@ TArrayTable::TArrayTable(std::size_t s):TTable()
 		throw 0;
 	size = s;
 	curr = 0;
-	pRec = std::make_unique<TRecord[]>(size);
+	pRec = new TRecord[size];
 }
 TArrayTable::TArrayTable(const TArrayTable& t)
 {
 	size = t.size;
 	curr = t.curr;
-	pRec = std::make_unique<TRecord[]>(size);
+	DataCount = t.DataCount;
+	pRec = new TRecord[size];
 	for (Reset(); !IsEnd(); GoNext())
 		pRec[curr] = t.pRec[curr];
+}
+TArrayTable::~TArrayTable()
+{
+	delete[] pRec;
 }
 void TArrayTable::Reset()
 {
@@ -95,7 +105,7 @@ TArrayTable& TArrayTable::operator=(const TArrayTable& t)
 		DataCount = t.DataCount;
 		size = t.size;
 		curr = t.curr;
-		pRec = std::make_unique<TRecord[]>(size);
+		pRec = new TRecord[size];
 		for (Reset(); !IsEnd(); GoNext())
 			pRec[curr] = t.pRec[curr];
 	}
@@ -103,7 +113,10 @@ TArrayTable& TArrayTable::operator=(const TArrayTable& t)
 }
 TRecord TArrayTable::GetCurr()
 {
-	return pRec[curr];
+	if (curr < DataCount)
+		return pRec[curr];
+	else
+		throw curr;
 }
 bool TArrayTable::IsFull() const
 {
@@ -117,7 +130,7 @@ bool TScamTable::Find(const TKey& key)
 {
 	bool fl(false);
 	curr = DataCount;
-	for (int i = 0; i < DataCount; i++)
+	for (std::size_t i = 0; i < DataCount; i++)
 	{
 		Eff++;
 		if (pRec[i].GetKey() == key)
@@ -154,6 +167,38 @@ bool TScamTable::Delete(const TKey& key)
 		return true;
 	}
 	return false;
+}
+TSortTable::TSortTable(std::size_t s) :TArrayTable(s) {}
+TSortTable::TSortTable(const TArrayTable& t):TArrayTable(t)
+{
+	Sort(pRec, pRec + DataCount);
+}
+void TSortTable::Sort(TRecord* start, TRecord* finish)
+{
+	for (start; start < finish; start++)
+	{
+		for (TRecord* j = start; j < finish; j++)
+		{
+			if (j->GetKey() < start->GetKey())
+			{
+				TRecord tmp(j->GetKey(), j->GetVal());
+				j->InsRec(start->GetKey(), start->GetVal());
+				start->InsRec(tmp);
+			}
+		}
+	}
+}
+bool TSortTable::Find(const TKey& key)
+{
+	return true;
+}
+bool TSortTable::Delete(const TKey& key)
+{
+	return true;
+}
+bool TSortTable::Insert(const TRecord& rec)
+{
+	return true;
 }
 THashTableStep::THashTableStep(std::size_t max, int st):TTable()
 {
@@ -197,18 +242,18 @@ THashTableStep& THashTableStep:: operator =(const THashTableStep& t) {
 }
 void THashTableStep::Reset()
 {
-	if (DataCount == 0)
-		throw 0;
-	for (curr = 0; curr < MaxSize; curr++)
-	{
-		if (array[curr].second != FREE && array[curr].second != DELETE)
-			break;
-	}
+		for (curr = 0; curr < MaxSize; curr++)
+		{
+			Eff++;
+			if (array[curr].second != FREE && array[curr].second != DELETE)
+				break;
+		}
 }
 void THashTableStep::GoNext()
 {
 	for (curr = curr+1; curr < MaxSize; curr++)
 	{
+		Eff++;
 		if (array[curr].second != FREE && array[curr].second != DELETE)
 			break;
 	}
@@ -274,7 +319,10 @@ std::size_t THashTableStep::HashFunc(const TKey& key)
 }
 TRecord THashTableStep::GetCurr()
 {
-	return array[curr].first;
+	if (curr >= 0 && curr < MaxSize)
+		return array[curr].first;
+	else
+		throw curr;
 }
 THashList::THashList(): rec()
 {
@@ -308,6 +356,8 @@ THashTableList::THashTableList(const THashTableList& t)
 	DataCount = t.DataCount;
 	current_position = 0;
 	curr = NULL;
+	prev = NULL;
+	found_now = 0;
 	array = new THashList * [MaxSize];
 	for (std::size_t i = 0; i < MaxSize; i++)
 	{
@@ -401,16 +451,17 @@ THashTableList& THashTableList::operator=(const THashTableList& t)
 }
 void THashTableList::Reset()
 {
-	if (DataCount == 0)
-		throw 0;
-	for (std::size_t i = 0; i < MaxSize; i++)
+	if (DataCount != 0)
 	{
-		Eff++;
-		curr = array[i];
-		if (curr != NULL)
-			break;
+		for (std::size_t i = 0; i < MaxSize; i++)
+		{
+			Eff++;
+			curr = array[i];
+			if (curr != NULL)
+				break;
+		}
+		found_now++;
 	}
-	found_now++;
 }
 bool THashTableList::IsEnd()
 {
@@ -423,11 +474,13 @@ void THashTableList::GoNext()
 	else
 		curr = curr->pNext;
 	Eff++;
-	while (curr == NULL)
+	while (curr == NULL && current_position<MaxSize)
 	{
 		Eff++;
 		curr = array[++current_position];
 	}
+	if (current_position != MaxSize)
+		found_now++;
 }
 bool THashTableList::IsFull() const
 {
@@ -441,6 +494,8 @@ bool THashTableList::IsFull() const
 	return false;
 }
 TRecord THashTableList::GetCurr() {
+	if (!curr)
+		throw NULL;
 	return curr->GetRec();
 }
 std::size_t THashTableList::HashFunc(const TKey& key)
@@ -505,6 +560,7 @@ bool THashTableList::Delete(const TKey& key)
 		}
 		delete curr;
 		Eff++;
+		DataCount--;
 		return true;
 	}
 	return false;

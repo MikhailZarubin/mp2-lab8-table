@@ -7,6 +7,8 @@ typedef int TVal;
 const int OCCUP = 0;
 const int FREE = -1;
 const int DELETE = -2;
+
+const std::size_t START_SIZE = 10;
 class TRecord {
 protected:
 	TKey Key;
@@ -14,6 +16,7 @@ protected:
 public:
 	TRecord(TKey k = 0, TVal v = 0);
 	void InsRec(TKey k, TVal v);
+	void InsRec(TRecord rec);
 	TKey GetKey() const;
 	TVal GetVal() const;
 	bool operator == (const TRecord& rec) const;
@@ -33,7 +36,7 @@ public:
 class TTable
 {
 protected:
-	int DataCount, Eff;
+	std::size_t DataCount, Eff;
 public:
 	TTable();
 	bool IsEmpty() const;
@@ -44,31 +47,42 @@ public:
 	virtual void Reset() = 0;
 	virtual void GoNext() = 0;
 	virtual bool IsEnd() = 0;
-	virtual TRecord GetCurr() = 0;
     void Print();
+	virtual TRecord GetCurr() = 0;
 	int GetEff() const;
 	int GetData() const;
 	void ClearEff();
 };
 class TArrayTable :public TTable {
 protected:
-	std::unique_ptr<TRecord[]> pRec;
+	TRecord* pRec;
 	std::size_t size, curr;
 public:
-	TArrayTable(std::size_t s = 100);
+	TArrayTable(std::size_t s = START_SIZE);
 	TArrayTable(const TArrayTable& t);
-	~TArrayTable() = default;
+	~TArrayTable();
 	TArrayTable& operator=(const TArrayTable& t);
 	void Reset() override;
 	void GoNext() override;
+	TRecord GetCurr() override;
 	bool IsEnd() override;
 	bool IsFull()const override;
-	TRecord GetCurr() override;
 };
 class TScamTable :public TArrayTable {
 public:
-	TScamTable(std::size_t s = 100);
+	TScamTable(std::size_t s = START_SIZE);
 	TScamTable(const TScamTable& t);
+	bool Find(const TKey& key) override;
+	bool Insert(const TRecord& rec) override;
+	bool Delete(const TKey& key) override;
+};
+
+class TSortTable :public TArrayTable {
+public:
+	TSortTable(std::size_t s = START_SIZE);
+	TSortTable(const TArrayTable& t);
+	void Sort(TRecord* start, TRecord* finish);
+	TSortTable& operator=(const TArrayTable& t);
 	bool Find(const TKey& key) override;
 	bool Insert(const TRecord& rec) override;
 	bool Delete(const TKey& key) override;
@@ -82,15 +96,15 @@ protected:
 	std::unique_ptr<std::pair<TRecord, int>[]> array;
 	std::size_t HashFunc(const TKey& key);
 public:
-	THashTableStep(std::size_t max = 100, int st = 3);
+	THashTableStep(std::size_t max = START_SIZE, int st = 3);
 	THashTableStep(const THashTableStep& table);
 	~THashTableStep() = default;
 	void Reset() override;
 	void GoNext() override;
 	bool IsEnd() override;
+	TRecord GetCurr() override;
 	bool IsFull()const override;
 	THashTableStep& operator = (const THashTableStep& table);
-	TRecord GetCurr() override;
 	bool Find(const TKey& key) override;
 	bool Insert(const TRecord& rec) override;
 	bool Delete(const TKey& key) override;
@@ -104,15 +118,15 @@ protected:
 	THashList** array;
 	std::size_t HashFunc(const TKey& k);
 public:
-	THashTableList(std::size_t max = 100);
+	THashTableList(std::size_t max = START_SIZE);
 	THashTableList(const THashTableList& t);
 	~THashTableList();
 	THashTableList& operator = (const THashTableList& table);
 	void Reset() override;
 	void GoNext() override;
 	bool IsEnd() override;
-	bool IsFull()const override;
 	TRecord GetCurr() override;
+	bool IsFull()const override;
 	bool Find(const TKey& key) override;
 	bool Insert(const TRecord& rec) override;
 	bool Delete(const TKey& key) override;
