@@ -60,6 +60,31 @@ TEST(Record, the_records_after_the_assignment_are_the_same)
 	r1 = r2;
 	EXPECT_EQ(r1 == r2, true);
 }
+//
+TEST(HashList, can_create_HashList)
+{
+	ASSERT_NO_THROW(THashList t);
+}
+TEST(HashList, can_create_HashList_with_parametrs)
+{
+	TRecord rec;
+	ASSERT_NO_THROW(THashList t(rec, NULL));
+}
+TEST(HashList, can_get_record_from_HashList)
+{
+	THashList t;
+	ASSERT_NO_THROW(t.GetRec());
+}
+//
+TEST(Node, can_create_Node)
+{
+	ASSERT_NO_THROW(TNode t);
+}
+TEST(Node, can_create_Node_withw_parametrs)
+{
+	ASSERT_NO_THROW(TNode t(NULL, NULL));
+}
+//
 TEST(ScamTable, can_create_ScamTable)
 {
 	ASSERT_NO_THROW(TScamTable t);
@@ -69,7 +94,7 @@ TEST(ScamTable, can_copy_ScamTable)
 	TScamTable copy;
 	ASSERT_NO_THROW(TScamTable t(copy));
 }
-TEST(ScamTable, can_assign_table)
+TEST(ScamTable, can_assign_ScamTable)
 {
 	TScamTable t1(1), t2(2), t3(3);
 	ASSERT_NO_THROW(t1 = t2 = t3);
@@ -172,15 +197,129 @@ TEST(ScamTable, delete_a_nonexistent_record_in_ScamTable_will_return_the_false)
 	EXPECT_EQ(t.Delete(r1.GetKey()), false);
 	EXPECT_EQ(t.GetData(), 1);
 }
+//
 TEST(SortTable, can_create_SortTable)
 {
 	ASSERT_NO_THROW(TSortTable t);
 }
-TEST(HashTableStep, can_create_table)
+TEST(SortTable, can_not_create_SortTable_with_zero_size)
+{
+	ASSERT_ANY_THROW(TSortTable t(0));
+}
+TEST(SortTable, can_copy_SortTable)
+{
+	TSortTable t;
+	ASSERT_NO_THROW(TSortTable copy(t));
+}
+TEST(SortTable, can_assign_SortTable)
+{
+	TSortTable t1, t2, t3;
+	ASSERT_NO_THROW(t1 = t2 = t3);
+}
+TEST(SortTable, can_insert_record_in_no_full_SortTable)
+{
+	TSortTable t;
+	TRecord r;
+	ASSERT_NO_THROW(t.Insert(r));
+}
+TEST(SortTable, can_find_record_in_SortTable)
+{
+	TSortTable t;
+	TRecord r;
+	ASSERT_NO_THROW(t.Find(r.GetKey()));
+}
+TEST(SortTable, can_delete_record_in_no_empty_SortTable)
+{
+	TSortTable t;
+	TRecord r;
+	t.Insert(r);
+	ASSERT_NO_THROW(t.Delete(r.GetKey()));
+}
+TEST(SortTable, can_not_insert_in_full_SortTable)
+{
+	TSortTable t(1);
+	TRecord r;
+	t.Insert(r);
+	ASSERT_ANY_THROW(t.Insert(r));
+}
+TEST(SortTable, can_not_delete_in_empty_SortTable)
+{
+	TSortTable t;
+	TRecord r;
+	ASSERT_ANY_THROW(t.Delete(r.GetKey()));
+}
+TEST(SortTable, can_crawl_an_empty_SortTable)
+{
+	TSortTable t;
+	ASSERT_NO_THROW(for (t.Reset(); !t.IsEnd(); t.GoNext()););
+}
+TEST(SortTable, can_crawl_a_non_empty_SortTable)
+{
+	TSortTable t;
+	TRecord rec1(20, 5), rec2(180, 5), rec3(50, 5);
+	t.Insert(rec1);
+	t.Insert(rec2);
+	t.Insert(rec3);
+	ASSERT_NO_THROW(for (t.Reset(); !t.IsEnd(); t.GoNext()););
+}
+TEST(SortTable, find_for_an_existing_record_in_SortTable_will_return_the_true)
+{
+	TSortTable t;
+	TRecord r;
+	t.Insert(r);
+	EXPECT_EQ(t.GetData(), 1);
+	EXPECT_EQ(t.Find(r.GetKey()), true);
+	EXPECT_EQ(t.GetData(), 1);
+}
+TEST(SortTable, find_for_a_nonexistent_record_in_SortTable_will_return_the_false)
+{
+	TSortTable t;
+	TRecord r;
+	EXPECT_EQ(t.GetData(), 0);
+	EXPECT_EQ(t.Find(r.GetKey()), false);
+	EXPECT_EQ(t.GetData(), 0);
+}
+TEST(SortTable, insert_a_nonexistent_record_in_SortTable_will_return_the_true)
+{
+	TSortTable t;
+	TRecord r;
+	EXPECT_EQ(t.GetData(), 0);
+	EXPECT_EQ(t.Insert(r), true);
+	EXPECT_EQ(t.GetData(), 1);
+}
+TEST(SortTable, insert_an_existing_record_in_SortTable_will_return_the_false)
+{
+	TSortTable t;
+	TRecord r;
+	t.Insert(r);
+	EXPECT_EQ(t.GetData(), 1);
+	EXPECT_EQ(t.Insert(r), false);
+	EXPECT_EQ(t.GetData(), 1);
+}
+TEST(SortTable, delete_an_existing_record_in_SortTable_will_return_the_true)
+{
+	TSortTable t;
+	TRecord r;
+	t.Insert(r);
+	EXPECT_EQ(t.GetData(), 1);
+	EXPECT_EQ(t.Delete(r.GetKey()), true);
+	EXPECT_EQ(t.GetData(), 0);
+}
+TEST(SortTable, delete_a_nonexistent_record_in_SortTable_will_return_the_false)
+{
+	TSortTable t;
+	TRecord r, r1(5, 6);
+	t.Insert(r);
+	EXPECT_EQ(t.GetData(), 1);
+	EXPECT_EQ(t.Delete(r1.GetKey()), false);
+	EXPECT_EQ(t.GetData(), 1);
+}
+//
+TEST(HashTableStep, can_create_HashTableStep)
 {
 	ASSERT_NO_THROW(THashTableStep t);
 }
-TEST(HashTableStep, can_not_create_table_with_zero_size)
+TEST(HashTableStep, can_not_create_HashTableStep_with_zero_size)
 {
 	ASSERT_ANY_THROW(THashTableStep t(0));
 }
@@ -188,15 +327,15 @@ TEST(HashTableStep, can_not_create_table_with_a_multiple_of_the_size_of_the_step
 {
 	ASSERT_ANY_THROW(THashTableStep t(100,10));
 }
-TEST(HashTableStep, can_copy_table)
+TEST(HashTableStep, can_copy_HashTableStep)
 {
 	THashTableStep t;
 	ASSERT_NO_THROW(THashTableStep copy(t));
 }
-TEST(HashTableStep, can_assign_table)
+TEST(HashTableStep, can_assign_HashTableStep)
 {
-	THashTableStep t1, t2;
-	ASSERT_NO_THROW(t1 = t2);
+	THashTableStep t1, t2, t3;
+	ASSERT_NO_THROW(t1 = t2 = t3);
 }
 TEST(HashTableStep, can_insert_record_in_no_full_HashTableStep)
 {
@@ -296,6 +435,7 @@ TEST(HashTableStep, delete_a_nonexistent_record_in_HashTableStep_will_return_the
 	EXPECT_EQ(t.Delete(r1.GetKey()), false);
 	EXPECT_EQ(t.GetData(), 1);
 }
+//
 TEST(HashTableList, can_create_HashTableList)
 {
 	ASSERT_NO_THROW(THashTableList t);

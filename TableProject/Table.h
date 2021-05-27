@@ -1,14 +1,20 @@
 #pragma once
 #include<iostream>
+#include<fstream>
+#include<algorithm>
+#include<stack>
 
+//redefining types
 typedef int TKey;
 typedef int TVal;
 
+//constants
 const int OCCUP = 0;
 const int FREE = -1;
-const int DELETE = -2;
-
+const int DEL = -2;
 const std::size_t START_SIZE = 10;
+
+//resource classes
 class TRecord {
 protected:
 	TKey Key;
@@ -32,7 +38,13 @@ public:
 	THashList* pNext;
 	TRecord GetRec() const;
 };
+class TNode: public TRecord{
+public:
+	TNode(TNode* pl = NULL, TNode* pr = NULL);
+	TNode* pLeft, * pRight;
+};
 
+//abstract base class
 class TTable
 {
 protected:
@@ -53,6 +65,8 @@ public:
 	std::size_t GetData() const;
 	void ClearEff();
 };
+//working classes
+//
 class TArrayTable :public TTable {
 protected:
 	TRecord* pRec;
@@ -69,6 +83,7 @@ public:
 	bool IsFull()const override;
 	std::size_t GetSize() const;
 };
+//
 class TScamTable :public TArrayTable {
 public:
 	TScamTable(std::size_t s = START_SIZE);
@@ -77,7 +92,7 @@ public:
 	bool Insert(const TRecord& rec) override;
 	bool Delete(const TKey& key) override;
 };
-
+//
 class TSortTable :public TArrayTable {
 	void Sort(std::size_t left, std::size_t right);
 public:
@@ -88,7 +103,22 @@ public:
 	bool Insert(const TRecord& rec) override;
 	bool Delete(const TKey& key) override;
 };
-
+//
+class TTreeTable :public TTable {
+protected:
+	TNode* pRoot, * pCurr, * pPrev;
+	std::stack<TNode*> st;
+public:
+	TTreeTable();
+	~TTreeTable();
+	bool IsFull()const override;
+	TArrayTable& operator=(const TArrayTable& t);
+	void Reset() override;
+	void GoNext() override;
+	bool IsEnd() override;
+	TRecord GetCurr() override;
+};
+//
 class THashTableStep : public TTable
 {
 protected:
@@ -110,6 +140,7 @@ public:
 	bool Insert(const TRecord& rec) override;
 	bool Delete(const TKey& key) override;
 };
+//
 class THashTableList :public TTable
 {
 protected:

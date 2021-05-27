@@ -1,5 +1,5 @@
 #include "Table.h"
-
+//TRecord metods
 TRecord::TRecord(TKey k, TVal v)
 {
 	Key = k;
@@ -36,6 +36,7 @@ TRecord& TRecord::operator =(const TRecord& rec)
 	}
 	return *this;
 }
+//TTable metods
 TTable::TTable()
 {
 	DataCount = 0;
@@ -66,6 +67,7 @@ void TTable::Print()
 		std::cout << '[' << tmp.GetKey() << ']' << tmp.GetVal() << ' ';
 	}
 }
+//TArrayTable metods
 TArrayTable::TArrayTable(std::size_t s):TTable()
 {
 	if (s == 0)
@@ -125,6 +127,7 @@ bool TArrayTable::IsFull() const
 std::size_t TArrayTable::GetSize()const {
 	return size;
 }
+//TScamTable metods
 TScamTable::TScamTable(size_t s) :TArrayTable(s)
 {}
 TScamTable::TScamTable(const TScamTable& t):TArrayTable(t)
@@ -170,6 +173,7 @@ bool TScamTable::Delete(const TKey& key)
 	}
 	return false;
 }
+//TSortTable metods
 TSortTable::TSortTable(std::size_t s) :TArrayTable(s) {}
 TSortTable::TSortTable(const TArrayTable& t):TArrayTable(t)
 {
@@ -272,6 +276,7 @@ bool TSortTable::Delete(const TKey& key)
 	}
 	return false;
 }
+//THashTableStep metods
 THashTableStep::THashTableStep(std::size_t max, int st):TTable()
 {
 	if (max == 0)
@@ -317,7 +322,7 @@ void THashTableStep::Reset()
 		for (curr = 0; curr < MaxSize; curr++)
 		{
 			Eff++;
-			if (array[curr].second != FREE && array[curr].second != DELETE)
+			if (array[curr].second != FREE && array[curr].second != DEL)
 				break;
 		}
 }
@@ -326,7 +331,7 @@ void THashTableStep::GoNext()
 	for (curr = curr+1; curr < MaxSize; curr++)
 	{
 		Eff++;
-		if (array[curr].second != FREE && array[curr].second != DELETE)
+		if (array[curr].second != FREE && array[curr].second != DEL)
 			break;
 	}
 }
@@ -343,7 +348,7 @@ bool THashTableStep::Find(const TKey& key)
 		Eff++;
 		if (array[curr].second == FREE)
 			break;
-		else if (array[curr].second == DELETE && DelPos == -1)
+		else if (array[curr].second == DEL && DelPos == -1)
 			DelPos = curr;
 		else if (array[curr].first.GetKey() == key && array[curr].second == OCCUP)
 			return true;
@@ -373,7 +378,7 @@ bool THashTableStep::Delete(const TKey& key)
 		throw 0;
 	if (Find(key))
 	{
-		array[curr].second = DELETE;
+		array[curr].second = DEL;
 		DataCount--;
 		Eff++;
 		return true;
@@ -395,6 +400,7 @@ TRecord THashTableStep::GetCurr()
 	else
 		throw curr;
 }
+//THashList metods
 THashList::THashList(): rec()
 {
 	pNext = NULL;
@@ -408,6 +414,7 @@ TRecord THashList::GetRec()const
 {
 	return rec;
 }
+//THashTableList metods
 THashTableList::THashTableList(std::size_t s)
 {
 	if (s == 0)
@@ -634,4 +641,10 @@ bool THashTableList::Delete(const TKey& key)
 		return true;
 	}
 	return false;
+}
+//TNode metods
+TNode::TNode(TNode* pl, TNode* pr)
+{
+	pLeft = pl;
+	pRight = pr;
 }
