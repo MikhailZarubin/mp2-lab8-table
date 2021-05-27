@@ -219,8 +219,8 @@ TSortTable& TSortTable::operator=(TArrayTable& t)
 }
 bool TSortTable::Find(const TKey& key)
 {
-	std::size_t left = 0, right = DataCount - 1;
-	std::size_t pos;
+	int left = 0, right = DataCount - 1;
+	int pos;
 	while (left <= right)
 	{
 		Eff++;
@@ -241,12 +241,11 @@ bool TSortTable::Find(const TKey& key)
 bool TSortTable::Insert(const TRecord& rec)
 {
 	if (IsFull())
-		throw size;
+		throw 0;
 	if (!Find(rec.GetKey()))
 	{
 		Eff++;
-		DataCount++;
-		for (std::size_t i = DataCount; i > curr; i--)
+		for (std::size_t i = DataCount++; i > curr; i--)
 		{
 			Eff++;
 			pRec[i] = pRec[i - 1];
