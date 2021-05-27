@@ -45,11 +45,11 @@ bool TTable::IsEmpty()const
 {
 	return DataCount == 0;
 }
-int TTable::GetData() const
+std::size_t TTable::GetData() const
 {
 	return DataCount;
 }
-int TTable::GetEff()const
+std::size_t TTable::GetEff()const
 {
 	return Eff;
 }
@@ -122,6 +122,9 @@ bool TArrayTable::IsFull() const
 {
 	return DataCount == size;
 }
+std::size_t TArrayTable::GetSize()const {
+	return size;
+}
 TScamTable::TScamTable(size_t s) :TArrayTable(s)
 {}
 TScamTable::TScamTable(const TScamTable& t):TArrayTable(t)
@@ -148,8 +151,7 @@ bool TScamTable::Insert(const TRecord& rec)
 		throw size;
 	if (!this->Find(rec.GetKey()))
 	{
-		TRecord tmp(rec.GetKey(), rec.GetVal());
-		pRec[curr] = tmp;
+		pRec[curr] = rec;
 		DataCount++;
 		Eff++;
 		return true;
@@ -171,34 +173,105 @@ bool TScamTable::Delete(const TKey& key)
 TSortTable::TSortTable(std::size_t s) :TArrayTable(s) {}
 TSortTable::TSortTable(const TArrayTable& t):TArrayTable(t)
 {
-	Sort(pRec, pRec + DataCount);
+	Sort(0, DataCount-1);
 }
-void TSortTable::Sort(TRecord* start, TRecord* finish)
+void TSortTable::Sort(std::size_t left, std::size_t right)
 {
-	for (start; start < finish; start++)
+	TRecord leader = pRec[(std::size_t)((left + right) * 0.5)];
+	std::size_t l = left, r = right;
+	while (l <= r)
 	{
-		for (TRecord* j = start; j < finish; j++)
+		Eff++;
+		while (pRec[l].GetKey() < leader.GetKey())
 		{
-			if (j->GetKey() < start->GetKey())
-			{
-				TRecord tmp(j->GetKey(), j->GetVal());
-				j->InsRec(start->GetKey(), start->GetVal());
-				start->InsRec(tmp);
-			}
+			Eff++;
+			l++;
 		}
+		while (pRec[l].GetKey() > leader.GetKey());
+		{
+			Eff++;
+			r--;
+		}
+		if (l <= r)
+			std::swap(pRec[l++], pRec[r--]);
 	}
+	if (left < r)
+		Sort(left, r);
+	else if (right > l)
+		Sort(l, right);
+}
+TSortTable& TSortTable::operator=(TArrayTable& t)
+{
+	if (&t != this) {
+		DataCount = t.GetData();
+		size = t.GetSize();
+		curr = 0;
+		pRec = new TRecord[size];
+		for (t.Reset(); !t.IsEnd(); t.GoNext())
+		{
+			Eff++;
+			pRec[curr] = t.GetCurr();
+			curr++;
+		}
+		Sort(0, DataCount - 1);
+	}
+	return *this;
 }
 bool TSortTable::Find(const TKey& key)
 {
-	return true;
-}
-bool TSortTable::Delete(const TKey& key)
-{
-	return true;
+	std::size_t left = 0, right = DataCount - 1;
+	std::size_t pos;
+	while (left <= right)
+	{
+		Eff++;
+		pos = (std::size_t)((left + right) * 0.5);
+		if (pRec[pos].GetKey() == key)
+		{
+			curr = pos;
+			return true;
+		}
+		else if (pRec[pos].GetKey() > key)
+			right = pos - 1;
+		else
+			left = pos + 1;
+	}
+	curr = left;
+	return false;
 }
 bool TSortTable::Insert(const TRecord& rec)
 {
-	return true;
+	if (IsFull())
+		throw size;
+	if (!Find(rec.GetKey()))
+	{
+		Eff++;
+		DataCount++;
+		for (std::size_t i = DataCount; i > curr; i--)
+		{
+			Eff++;
+			pRec[i] = pRec[i - 1];
+		}
+		pRec[curr] = rec;
+		return true;
+	}
+	return false;
+}
+bool TSortTable::Delete(const TKey& key)
+{
+	if (IsEmpty())
+		throw 0;
+	if (Find(key))
+	{
+		Eff++;
+		DataCount--;
+		for (std::size_t i = curr; i < DataCount; i++)
+		{
+			Eff++;
+			pRec[i] = pRec[i + 1];
+		}
+		return true;
+	}
+	return false;
 }
 THashTableStep::THashTableStep(std::size_t max, int st):TTable()
 {
@@ -287,8 +360,7 @@ bool THashTableStep::Insert(const TRecord& rec)
 		throw MaxSize;
 	if (!Find(rec.GetKey()))
 	{
-		TRecord tmp;
-		array[curr].first = tmp;
+		array[curr].first = rec;
 		array[curr].second = OCCUP;
 		DataCount++;
 		Eff++;
@@ -526,15 +598,14 @@ bool THashTableList::Insert(const TRecord& rec)
 		throw 0;
 	if (!Find(rec.GetKey()))
 	{
-		TRecord res = rec;
 		if (prev == NULL)
 		{
 			std::size_t ind = HashFunc(rec.GetKey());
-			array[ind] = new THashList(res, NULL);
+			array[ind] = new THashList(rec, NULL);
 		}
 		else
 		{
-			curr = new THashList(res, NULL);
+			curr = new THashList(rec, NULL);
 			prev->pNext = curr;
 		}
 		Eff++;

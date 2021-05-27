@@ -49,8 +49,8 @@ public:
 	virtual bool IsEnd() = 0;
     void Print();
 	virtual TRecord GetCurr() = 0;
-	int GetEff() const;
-	int GetData() const;
+	std::size_t GetEff() const;
+	std::size_t GetData() const;
 	void ClearEff();
 };
 class TArrayTable :public TTable {
@@ -67,6 +67,7 @@ public:
 	TRecord GetCurr() override;
 	bool IsEnd() override;
 	bool IsFull()const override;
+	std::size_t GetSize() const;
 };
 class TScamTable :public TArrayTable {
 public:
@@ -78,11 +79,11 @@ public:
 };
 
 class TSortTable :public TArrayTable {
+	void Sort(std::size_t left, std::size_t right);
 public:
 	TSortTable(std::size_t s = START_SIZE);
 	TSortTable(const TArrayTable& t);
-	void Sort(TRecord* start, TRecord* finish);
-	TSortTable& operator=(const TArrayTable& t);
+	TSortTable& operator=(TArrayTable& t);
 	bool Find(const TKey& key) override;
 	bool Insert(const TRecord& rec) override;
 	bool Delete(const TKey& key) override;
