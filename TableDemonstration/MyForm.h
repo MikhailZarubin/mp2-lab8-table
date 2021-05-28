@@ -10,27 +10,14 @@ namespace CppWinForm1 {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace System::Diagnostics;
 
 	/// <summary>
 	/// Summary for MyForm
 	/// </summary>
 	public ref class MyForm : public System::Windows::Forms::Form
 	{
-		Graphics^ gr;
 
-
-
-
-
-
-
-
-
-
-
-		   bool f1, f2, res;
-
-		   Pen^ ErrorPoint, ^ ErrorLine;
 	private: System::Windows::Forms::Button^ button1;
 
 
@@ -47,8 +34,7 @@ namespace CppWinForm1 {
 		MyForm(void)
 		{
 			InitializeComponent();
-			gr = this->CreateGraphics();
-			
+
 			//
 			//TODO: Add the constructor code here
 			//
@@ -89,7 +75,7 @@ namespace CppWinForm1 {
 			// 
 			this->button1->Location = System::Drawing::Point(12, 482);
 			this->button1->Name = L"button1";
-			this->button1->Size = System::Drawing::Size(447, 23);
+			this->button1->Size = System::Drawing::Size(461, 23);
 			this->button1->TabIndex = 0;
 			this->button1->Text = L"RUN_ALL_TESTS";
 			this->button1->UseVisualStyleBackColor = true;
@@ -108,15 +94,14 @@ namespace CppWinForm1 {
 			this->ResumeLayout(false);
 
 		}
-#pragma endregion
-	
-
+#pragma endregion{
 	private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
-			STARTUPINFO cif;
-			ZeroMemory(&cif, sizeof(STARTUPINFO));
-			PROCESS_INFORMATION pi;
-			CreateProcess("..\\TableProject\\Debug\\TestTable.exe" ,NULL, NULL, NULL, FALSE, NULL, NULL, NULL, &cif, &pi);
-			WaitForSingleObject(pi.hProcess, INFINITY);
+
+		STARTUPINFO cif;
+		ZeroMemory(&cif, sizeof(STARTUPINFO));
+		PROCESS_INFORMATION pi;
+		CreateProcessA("..\\TableProject\\Debug\\TestTable.exe", NULL, NULL, NULL, FALSE, NULL, NULL, NULL, &cif, &pi);
+		WaitForSingleObject(pi.hProcess, INFINITY);
 	}
 	};
 }

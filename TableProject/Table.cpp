@@ -666,6 +666,7 @@ void TNode::InsRec(const TRecord& r)
 TTreeTable::TTreeTable()
 {
 	pRoot = pCurr = pPrev = NULL;
+	found_now = 0;
 }
 TTreeTable::~TTreeTable()
 {
@@ -759,22 +760,26 @@ bool TTreeTable::Delete(const TKey& key)
 		if (!pCurr->pLeft && !pCurr->pRight)
 		{
 			TNode* tmp = pCurr;
+			if (pPrev)
+			{
+				if (pPrev->pLeft == pCurr)
+					pPrev->pLeft = NULL;
+				else
+					pPrev->pRight = NULL;
+			}
 			delete tmp;
-			pCurr = NULL;
 		}
 		else if (!pCurr->pLeft && pCurr->pRight)
 		{
 			TNode* tmp = pCurr->pRight;
 			pCurr->InsRec(pCurr->pRight->GetRec());
 			delete tmp;
-			pCurr->pRight = NULL;
 		}
 		else if (pCurr->pLeft && !pCurr->pRight)
 		{
 			TNode* tmp = pCurr->pLeft;
 			pCurr->InsRec(pCurr->pLeft->GetRec());
 			delete tmp;
-			pCurr->pLeft = NULL;
 		}
 		else
 		{
@@ -799,16 +804,40 @@ bool TTreeTable::Delete(const TKey& key)
 	}
 	return false;
 }
-//not ready
 void TTreeTable::Reset()
 {
+	while (!st.empty())
+		st.pop();
 	pCurr = pRoot;
+	found_now = 0;
+	if (pCurr) {
+		while (pCurr->pLeft)
+			pCurr = pCurr->pLeft;
+		found_now++;
+	}
 }
 void TTreeTable::GoNext()
 {
-
+	if (pCurr)
+	{
+		TNode* tmp = pCurr = pCurr->pRight;
+		if(!st.empty())
+		st.pop();
+		while (tmp)
+		{
+			st.push(tmp);
+			pCurr = tmp;
+			tmp = tmp->pLeft;
+		}
+		if (!pCurr && !st.empty())
+		{
+			pCurr = st.top();
+			st.pop();
+		}
+		found_now++;
+	}
 }
 bool TTreeTable::IsEnd()
 {
-	return st.empty();
+	return found_now == DataCount;
 }

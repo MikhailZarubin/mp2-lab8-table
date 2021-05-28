@@ -1,6 +1,10 @@
-#include "gtest.h"
+﻿#include "gtest.h"
+#include<Windows.h>
 
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+    int flag= RUN_ALL_TESTS();
+    std::cout << "PRESS ENTER TO EXIT\n";
+    while (getchar() != '\n');
+    return flag;
 }

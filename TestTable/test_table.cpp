@@ -146,7 +146,7 @@ TEST(ScamTable, can_not_delete_in_empty_ScamTable)
 TEST(ScamTable, can_crawl_an_empty_ScamTable)
 {
 	TScamTable t;
-	ASSERT_NO_THROW(for (t.Reset(); !t.IsEnd(); t.GoNext()););
+	ASSERT_NO_THROW(for (t.Reset(); !t.IsEnd(); t.GoNext()) t.GetCurr(););
 }
 TEST(ScamTable, can_crawl_a_non_empty_ScamTable)
 {
@@ -155,7 +155,7 @@ TEST(ScamTable, can_crawl_a_non_empty_ScamTable)
 	t.Insert(rec1);
 	t.Insert(rec2);
 	t.Insert(rec3);
-	ASSERT_NO_THROW(for (t.Reset(); !t.IsEnd(); t.GoNext()););
+	ASSERT_NO_THROW(for (t.Reset(); !t.IsEnd(); t.GoNext()) t.GetCurr(););
 }
 TEST(ScamTable, find_for_an_existing_record_in_ScamTable_will_return_the_true)
 {
@@ -263,7 +263,7 @@ TEST(SortTable, can_not_delete_in_empty_SortTable)
 TEST(SortTable, can_crawl_an_empty_SortTable)
 {
 	TSortTable t;
-	ASSERT_NO_THROW(for (t.Reset(); !t.IsEnd(); t.GoNext()););
+	ASSERT_NO_THROW(for (t.Reset(); !t.IsEnd(); t.GoNext()) t.GetCurr(););
 }
 TEST(SortTable, can_crawl_a_non_empty_SortTable)
 {
@@ -272,7 +272,7 @@ TEST(SortTable, can_crawl_a_non_empty_SortTable)
 	t.Insert(rec1);
 	t.Insert(rec2);
 	t.Insert(rec3);
-	ASSERT_NO_THROW(for (t.Reset(); !t.IsEnd(); t.GoNext()););
+	ASSERT_NO_THROW(for (t.Reset(); !t.IsEnd(); t.GoNext()) t.GetCurr(););
 }
 TEST(SortTable, find_for_an_existing_record_in_SortTable_will_return_the_true)
 {
@@ -384,7 +384,7 @@ TEST(HashTableStep, can_not_delete_in_empty_HashTableStep)
 TEST(HashTableStep, can_crawl_an_empty_HashTableStep)
 {
 	THashTableStep t;
-	ASSERT_NO_THROW(for (t.Reset(); !t.IsEnd(); t.GoNext()););
+	ASSERT_NO_THROW(for (t.Reset(); !t.IsEnd(); t.GoNext()) t.GetCurr(););
 }
 TEST(HashTableStep, can_crawl_a_non_empty_HashTableStep)
 {
@@ -393,7 +393,7 @@ TEST(HashTableStep, can_crawl_a_non_empty_HashTableStep)
 	t.Insert(rec1);
 	t.Insert(rec2);
 	t.Insert(rec3);
-	ASSERT_NO_THROW(for (t.Reset(); !t.IsEnd(); t.GoNext()););
+	ASSERT_NO_THROW(for (t.Reset(); !t.IsEnd(); t.GoNext()) t.GetCurr(););
 }
 TEST(HashTableStep, find_for_an_existing_record_in_HashTableStep_will_return_the_true)
 {
@@ -483,7 +483,7 @@ TEST(HashTableList, can_assign_no_empty_HashTableList)
 TEST(HashTableList, can_crawl_an_empty_HashTableList)
 {
 	THashTableList t;
-	ASSERT_NO_THROW(for (t.Reset(); !t.IsEnd(); t.GoNext()););
+	ASSERT_NO_THROW(for (t.Reset(); !t.IsEnd(); t.GoNext()) t.GetCurr(););
 }
 TEST(HashTableList, can_crawl_a_non_empty_HashTableList)
 {
@@ -492,7 +492,7 @@ TEST(HashTableList, can_crawl_a_non_empty_HashTableList)
 	t.Insert(rec1);
 	t.Insert(rec2);
 	t.Insert(rec3);
-	ASSERT_NO_THROW(for (t.Reset(); !t.IsEnd(); t.GoNext()););
+	ASSERT_NO_THROW(for (t.Reset(); !t.IsEnd(); t.GoNext()) t.GetCurr(););
 }
 TEST(HashTableList, can_find_a_record_in_empty_HashTableList)
 {
@@ -622,7 +622,7 @@ TEST(TreeTable, can_not_delete_in_empty_TreeTable)
 TEST(TreeTable, can_crawl_an_empty_TreeTable)
 {
 	TTreeTable t;
-	ASSERT_NO_THROW(for (t.Reset(); !t.IsEnd(); t.GoNext()););
+	ASSERT_NO_THROW(for (t.Reset(); !t.IsEnd(); t.GoNext()) t.GetCurr(););
 }
 TEST(TreeTable, can_crawl_a_non_empty_TreeTable)
 {
@@ -631,7 +631,7 @@ TEST(TreeTable, can_crawl_a_non_empty_TreeTable)
 	t.Insert(rec1);
 	t.Insert(rec2);
 	t.Insert(rec3);
-	ASSERT_NO_THROW(for (t.Reset(); !t.IsEnd(); t.GoNext()););
+	ASSERT_NO_THROW(for (t.Reset(); !t.IsEnd(); t.GoNext()) t.GetCurr(););
 }
 TEST(TreeTable, find_for_an_existing_record_in_TreeTable_will_return_the_true)
 {

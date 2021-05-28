@@ -114,6 +114,7 @@ class TTreeTable :public TTable{
 protected:
 	TNode* pRoot, * pCurr, * pPrev;
 	std::stack<TNode*> st;
+	int found_now;
 public:
 	TTreeTable();
 	~TTreeTable();
