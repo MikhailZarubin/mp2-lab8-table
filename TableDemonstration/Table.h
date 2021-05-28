@@ -14,6 +14,7 @@ const int OCCUP = 0;
 const int FREE = -1;
 const int DEL = -2;
 const std::size_t START_SIZE = 10;
+const std::size_t BUFF_SIZE = 20;
 
 //resource classes
 class TRecord {
@@ -66,6 +67,8 @@ public:
 	virtual void GoNext() = 0;
 	virtual bool IsEnd() = 0;
     void Print();
+	void ReadFile(std::string filename);
+	void SaveFile(std::string filename);
 	virtual TRecord GetCurr() = 0;
 	std::size_t GetEff() const;
 	std::size_t GetData() const;

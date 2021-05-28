@@ -1,5 +1,5 @@
 #include "gtest.h"
-#include "../TableProject/Table.cpp"
+#include "../TableDemonstration/Table.cpp"
 
 TEST(Record, can_create_a_record)
 {

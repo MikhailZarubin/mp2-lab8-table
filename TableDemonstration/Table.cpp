@@ -67,6 +67,30 @@ void TTable::Print()
 		std::cout << '[' << tmp.GetKey() << ']' << tmp.GetVal() << ' ';
 	}
 }
+void TTable::SaveFile(std::string filename)
+{
+	std::ofstream ofs(filename);
+	TRecord tmp;
+	for (Reset(); !IsEnd(); GoNext())
+	{
+		tmp = this->GetCurr();
+		ofs << tmp.GetKey() << ' ' << tmp.GetVal() << '\n';
+	}
+}
+void TTable::ReadFile(std::string filename)
+{
+	std::ifstream ifs(filename);
+	char buff[BUFF_SIZE];
+	while (!ifs.eof())
+	{
+		ifs.getline(buff, BUFF_SIZE, ' ');
+		int key = atoi(buff);
+		ifs.getline(buff, BUFF_SIZE, '\n');
+		int val = atoi(buff);
+		TRecord tmp(key, val);
+		this->Insert(tmp);
+	}
+}
 //TArrayTable metods
 TArrayTable::TArrayTable(std::size_t s):TTable()
 {
