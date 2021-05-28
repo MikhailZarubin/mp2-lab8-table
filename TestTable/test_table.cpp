@@ -82,7 +82,19 @@ TEST(Node, can_create_Node)
 }
 TEST(Node, can_create_Node_withw_parametrs)
 {
-	ASSERT_NO_THROW(TNode t(NULL, NULL));
+	TRecord rec;
+	ASSERT_NO_THROW(TNode t(rec, NULL, NULL));
+}
+TEST(Node, can_get_record_from_Node)
+{
+	TNode t;
+	ASSERT_NO_THROW(t.GetRec());
+}
+TEST(Node, can_insert_record_from_Node)
+{
+	TNode t;
+	TRecord r;
+	ASSERT_NO_THROW(t.InsRec(r));
 }
 //
 TEST(ScamTable, can_create_ScamTable)
@@ -574,4 +586,102 @@ TEST(HashTableList, delete_for_an_existing_record_in_HashTableList_return_true)
 	EXPECT_EQ(t.GetData(), 1);
 	EXPECT_EQ(t.Delete(rec2.GetKey()), true);
 	EXPECT_EQ(t.GetData(), 0);
+}
+//
+TEST(TreeTable, can_create_TreeTable)
+{
+	ASSERT_NO_THROW(TTreeTable t);
+}
+
+TEST(TreeTable, can_insert_record_in_no_full_TreeTable)
+{
+	TTreeTable t;
+	TRecord r;
+	ASSERT_NO_THROW(t.Insert(r));
+}
+TEST(TreeTable, can_find_record_in_TreeTable)
+{
+	TTreeTable t;
+	TRecord r;
+	ASSERT_NO_THROW(t.Find(r.GetKey()));
+}
+TEST(TreeTable, can_delete_record_in_no_empty_TreeTable)
+{
+	TTreeTable t;
+	TRecord r;
+	t.Insert(r);
+	ASSERT_NO_THROW(t.Delete(r.GetKey()));
+}
+
+TEST(TreeTable, can_not_delete_in_empty_TreeTable)
+{
+	TTreeTable t;
+	TRecord r;
+	ASSERT_ANY_THROW(t.Delete(r.GetKey()));
+}
+TEST(TreeTable, can_crawl_an_empty_TreeTable)
+{
+	TTreeTable t;
+	ASSERT_NO_THROW(for (t.Reset(); !t.IsEnd(); t.GoNext()););
+}
+TEST(TreeTable, can_crawl_a_non_empty_TreeTable)
+{
+	TTreeTable t;
+	TRecord rec1(20, 5), rec2(180, 5), rec3(50, 5);
+	t.Insert(rec1);
+	t.Insert(rec2);
+	t.Insert(rec3);
+	ASSERT_NO_THROW(for (t.Reset(); !t.IsEnd(); t.GoNext()););
+}
+TEST(TreeTable, find_for_an_existing_record_in_TreeTable_will_return_the_true)
+{
+	TTreeTable t;
+	TRecord r;
+	t.Insert(r);
+	EXPECT_EQ(t.GetData(), 1);
+	EXPECT_EQ(t.Find(r.GetKey()), true);
+	EXPECT_EQ(t.GetData(), 1);
+}
+TEST(TreeTable, find_for_a_nonexistent_record_in_TreeTable_will_return_the_false)
+{
+	TTreeTable t;
+	TRecord r;
+	EXPECT_EQ(t.GetData(), 0);
+	EXPECT_EQ(t.Find(r.GetKey()), false);
+	EXPECT_EQ(t.GetData(), 0);
+}
+TEST(TreeTable, insert_a_nonexistent_record_in_TreeTable_will_return_the_true)
+{
+	TTreeTable t;
+	TRecord r;
+	EXPECT_EQ(t.GetData(), 0);
+	EXPECT_EQ(t.Insert(r), true);
+	EXPECT_EQ(t.GetData(), 1);
+}
+TEST(TreeTable, insert_an_existing_record_in_TreeTable_will_return_the_false)
+{
+	TTreeTable t;
+	TRecord r;
+	t.Insert(r);
+	EXPECT_EQ(t.GetData(), 1);
+	EXPECT_EQ(t.Insert(r), false);
+	EXPECT_EQ(t.GetData(), 1);
+}
+TEST(TreeTable, delete_an_existing_record_in_TreeTable_will_return_the_true)
+{
+	TTreeTable t;
+	TRecord r;
+	t.Insert(r);
+	EXPECT_EQ(t.GetData(), 1);
+	EXPECT_EQ(t.Delete(r.GetKey()), true);
+	EXPECT_EQ(t.GetData(), 0);
+}
+TEST(TreeTable, delete_a_nonexistent_record_in_TreeTable_will_return_the_false)
+{
+	TTreeTable t;
+	TRecord r, r1(5, 6);
+	t.Insert(r);
+	EXPECT_EQ(t.GetData(), 1);
+	EXPECT_EQ(t.Delete(r1.GetKey()), false);
+	EXPECT_EQ(t.GetData(), 1);
 }

@@ -1,7 +1,7 @@
 #pragma once
 #include <msclr/marshal_cppstd.h>
 #include"../TableProject/Table.h"
-std::string flag = "Линия добавлена не к плексу";
+
 namespace CppWinForm1 {
 
 	using namespace System;
@@ -31,6 +31,7 @@ namespace CppWinForm1 {
 		   bool f1, f2, res;
 
 		   Pen^ ErrorPoint, ^ ErrorLine;
+	private: System::Windows::Forms::Button^ button1;
 
 
 
@@ -81,7 +82,18 @@ namespace CppWinForm1 {
 		/// </summary>
 		void InitializeComponent(void)
 		{
+			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->SuspendLayout();
+			// 
+			// button1
+			// 
+			this->button1->Location = System::Drawing::Point(12, 482);
+			this->button1->Name = L"button1";
+			this->button1->Size = System::Drawing::Size(447, 23);
+			this->button1->TabIndex = 0;
+			this->button1->Text = L"RUN_ALL_TESTS";
+			this->button1->UseVisualStyleBackColor = true;
+			this->button1->Click += gcnew System::EventHandler(this, &MyForm::button1_Click);
 			// 
 			// MyForm
 			// 
@@ -89,6 +101,7 @@ namespace CppWinForm1 {
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::SystemColors::Window;
 			this->ClientSize = System::Drawing::Size(485, 517);
+			this->Controls->Add(this->button1);
 			this->Name = L"MyForm";
 			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
 			this->Text = L"MyForm";
@@ -98,5 +111,12 @@ namespace CppWinForm1 {
 #pragma endregion
 	
 
+	private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
+			STARTUPINFO cif;
+			ZeroMemory(&cif, sizeof(STARTUPINFO));
+			PROCESS_INFORMATION pi;
+			CreateProcess("..\\TableProject\\Debug\\TestTable.exe" ,NULL, NULL, NULL, FALSE, NULL, NULL, NULL, &cif, &pi);
+			WaitForSingleObject(pi.hProcess, INFINITY);
+	}
 	};
 }

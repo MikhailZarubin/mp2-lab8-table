@@ -1,4 +1,5 @@
 #pragma once
+
 #include<iostream>
 #include<fstream>
 #include<algorithm>
@@ -38,10 +39,15 @@ public:
 	THashList* pNext;
 	TRecord GetRec() const;
 };
-class TNode: public TRecord{
+class TNode{
+protected:
+	TRecord rec;
 public:
-	TNode(TNode* pl = NULL, TNode* pr = NULL);
+	TNode();
+	TNode(TRecord r, TNode* pl = NULL, TNode* pr = NULL);
 	TNode* pLeft, * pRight;
+	TRecord GetRec() const;
+	void InsRec(const TRecord& r);
 };
 
 //abstract base class
@@ -104,7 +110,7 @@ public:
 	bool Delete(const TKey& key) override;
 };
 //
-class TTreeTable :public TTable {
+class TTreeTable :public TTable{
 protected:
 	TNode* pRoot, * pCurr, * pPrev;
 	std::stack<TNode*> st;
@@ -112,7 +118,9 @@ public:
 	TTreeTable();
 	~TTreeTable();
 	bool IsFull()const override;
-	TArrayTable& operator=(const TArrayTable& t);
+	bool Find(const TKey& key) override;
+	bool Insert(const TRecord& rec) override;
+	bool Delete(const TKey& key) override;
 	void Reset() override;
 	void GoNext() override;
 	bool IsEnd() override;
