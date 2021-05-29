@@ -46,7 +46,7 @@ bool TTable::IsEmpty()const
 {
 	return DataCount == 0;
 }
-std::size_t TTable::GetData() const
+int TTable::GetData() const
 {
 	return DataCount;
 }
@@ -161,7 +161,7 @@ bool TScamTable::Find(const TKey& key)
 {
 	bool fl(false);
 	curr = DataCount;
-	for (std::size_t i = 0; i < DataCount; i++)
+	for (int i = 0; i < DataCount; i++)
 	{
 		Eff++;
 		if (pRec[i].GetKey() == key)
@@ -253,7 +253,7 @@ bool TSortTable::Find(const TKey& key)
 	while (left <= right)
 	{
 		Eff++;
-		pos = (std::size_t)((left + right) * 0.5);
+		pos = (int)((left + right) * 0.5);
 		if (pRec[pos].GetKey() == key)
 		{
 			curr = pos;
@@ -413,9 +413,9 @@ bool THashTableStep::IsFull() const
 {
 	return DataCount == MaxSize;
 }
-std::size_t THashTableStep::HashFunc(const TKey& key)
+int THashTableStep::HashFunc(const TKey& key)
 {
-	return (std::size_t)(key % MaxSize);
+	return (key % MaxSize);
 }
 TRecord THashTableStep::GetCurr()
 {
@@ -702,19 +702,22 @@ TTreeTable::TTreeTable()
 }
 TTreeTable::~TTreeTable()
 {
-	while (!st.empty())
-		st.pop();
-	pCurr = pRoot;
-	st.push(pCurr);
-	while (!st.empty())
+	if (pRoot)
 	{
-		pCurr = st.top();
-		st.pop();
-		if (pCurr->pLeft)
-			st.push(pCurr->pLeft);
-		else if (pCurr->pRight)
-			st.push(pCurr->pRight);
-		delete pCurr;
+		while (!st.empty())
+			st.pop();
+		pCurr = pRoot;
+		st.push(pCurr);
+		while (!st.empty())
+		{
+			pCurr = st.top();
+			st.pop();
+			if (pCurr->pLeft)
+				st.push(pCurr->pLeft);
+			else if (pCurr->pRight)
+				st.push(pCurr->pRight);
+			delete pCurr;
+		}
 	}
 }
 bool TTreeTable::IsFull() const
@@ -800,6 +803,8 @@ bool TTreeTable::Delete(const TKey& key)
 				else
 					pPrev->pRight = NULL;
 			}
+			else
+				pRoot = NULL;
 			delete tmp;
 		}
 		else if (!pCurr->pLeft && pCurr->pRight)
@@ -812,6 +817,8 @@ bool TTreeTable::Delete(const TKey& key)
 				else
 					pPrev->pRight = pCurr->pRight;
 			}
+			else
+				pRoot = NULL;
 			delete tmp;
 		}
 		else if (pCurr->pLeft && !pCurr->pRight)
@@ -824,6 +831,8 @@ bool TTreeTable::Delete(const TKey& key)
 				else
 					pPrev->pRight = pCurr->pLeft;
 			}
+			else
+				pRoot = NULL;
 			delete tmp;
 		}
 		else

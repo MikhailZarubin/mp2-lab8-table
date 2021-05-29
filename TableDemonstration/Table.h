@@ -55,7 +55,8 @@ public:
 class TTable
 {
 protected:
-	std::size_t DataCount, Eff;
+	int DataCount;
+	std::size_t Eff;
 public:
 	TTable();
 	bool IsEmpty() const;
@@ -71,7 +72,7 @@ public:
 	void SaveFile(std::string filename);
 	virtual TRecord GetCurr() = 0;
 	std::size_t GetEff() const;
-	std::size_t GetData() const;
+	int GetData() const;
 	void ClearEff();
 };
 //working classes
@@ -79,7 +80,8 @@ public:
 class TArrayTable :public TTable {
 protected:
 	TRecord* pRec;
-	std::size_t size, curr;
+	std::size_t size;
+	int curr;
 public:
 	TArrayTable(std::size_t s = START_SIZE);
 	TArrayTable(const TArrayTable& t);
@@ -134,10 +136,10 @@ public:
 class THashTableStep : public TTable
 {
 protected:
-	std::size_t curr, MaxSize;
-	int Step;
+	std::size_t MaxSize;
+	int curr, Step;
 	std::unique_ptr<std::pair<TRecord, int>[]> array;
-	std::size_t HashFunc(const TKey& key);
+	int HashFunc(const TKey& key);
 public:
 	THashTableStep(std::size_t max = START_SIZE, int st = 3);
 	THashTableStep(const THashTableStep& table);

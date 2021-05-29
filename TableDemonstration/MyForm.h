@@ -703,7 +703,7 @@ namespace CppWinForm1 {
 		}
 #pragma endregion
 	private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
-		Process^ proc = Process::Start("..\\Debug\\TestTable.exe");
+		Process^ proc = Process::Start("..\\x64\\Debug\\TestTable.exe");
 		proc->WaitForExit();
 	}
 
@@ -913,6 +913,11 @@ private: System::Void button7_Click(System::Object^ sender, System::EventArgs^ e
 			dataGridView1->Rows[i]->Cells[1]->Value = (tabl->GetCurr().GetVal()).ToString();
 			i++;
 		}
+		for (i; i < NumberOfRows; i++)
+		{
+			dataGridView1->Rows[i]->Cells[0]->Value = "";
+			dataGridView1->Rows[i]->Cells[1]->Value = "";
+		}
 	}
 }
 private: System::Void button8_Click(System::Object^ sender, System::EventArgs^ e) {
@@ -944,6 +949,8 @@ private: System::Void button8_Click(System::Object^ sender, System::EventArgs^ e
 	this->label10->Visible = true;
 	this->label11->Visible = true;
 	this->label12->Visible = true;
+	this->textBox1->Visible = false;
+	this->textBox2->Visible = false;
 	this->textBox3->Visible = false;
 	this->textBox4->Visible = false;
 	this->textBox5->Visible = true;
