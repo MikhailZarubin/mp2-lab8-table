@@ -555,34 +555,41 @@ void THashTableList::Reset()
 {
 	if (DataCount != 0)
 	{
-		for (std::size_t i = 0; i < MaxSize; i++)
+		for (current_position = 0; current_position < MaxSize; current_position++)
 		{
 			Eff++;
-			curr = array[i];
+			curr = array[current_position];
 			if (curr != NULL)
 				break;
 		}
-		found_now++;
 	}
 }
 bool THashTableList::IsEnd()
 {
-	return (found_now == DataCount);
+	return (found_now >= DataCount);
 }
 void THashTableList::GoNext()
 {
-	if (curr == NULL)
-		curr=array[++current_position];
-	else
-		curr = curr->pNext;
-	Eff++;
-	while (curr == NULL && current_position<MaxSize)
-	{
-		Eff++;
-		curr = array[++current_position];
+	if (!curr) {
+		while (curr == NULL && current_position < MaxSize)
+		{
+			Eff++;
+			curr = array[++current_position];
+		}
 	}
-	if (current_position != MaxSize)
-		found_now++;
+	else
+	{
+		curr = curr->pNext;
+		if (!curr) {
+			while (curr == NULL && current_position < MaxSize)
+			{
+				Eff++;				
+				curr = array[++current_position];
+			}
+		}
+	}
+	found_now++;
+	Eff++;
 }
 bool THashTableList::IsFull() const
 {
@@ -797,14 +804,26 @@ bool TTreeTable::Delete(const TKey& key)
 		}
 		else if (!pCurr->pLeft && pCurr->pRight)
 		{
-			TNode* tmp = pCurr->pRight;
-			pCurr->InsRec(pCurr->pRight->GetRec());
+			TNode* tmp = pCurr;
+			if (pPrev)
+			{
+				if (pPrev->pLeft == pCurr)
+					pPrev->pLeft = pCurr->pRight;
+				else
+					pPrev->pRight = pCurr->pRight;
+			}
 			delete tmp;
 		}
 		else if (pCurr->pLeft && !pCurr->pRight)
 		{
-			TNode* tmp = pCurr->pLeft;
-			pCurr->InsRec(pCurr->pLeft->GetRec());
+			TNode* tmp = pCurr;
+			if (pPrev)
+			{
+				if (pPrev->pLeft == pCurr)
+					pPrev->pLeft = pCurr->pLeft;
+				else
+					pPrev->pRight = pCurr->pLeft;
+			}
 			delete tmp;
 		}
 		else
