@@ -2,7 +2,7 @@
 #include"Table.h"
 #include <msclr/marshal_cppstd.h>
 
-
+const int NumberOfRows = 500;
 namespace CppWinForm1 {
 
 	using namespace System;
@@ -27,6 +27,29 @@ namespace CppWinForm1 {
 	private: System::Windows::Forms::Timer^ timer5;
 	private: System::Windows::Forms::Button^ button7;
 	private: System::Windows::Forms::Button^ button8;
+	private: System::Windows::Forms::Label^ label6;
+	private: System::Windows::Forms::Label^ label7;
+	private: System::Windows::Forms::TextBox^ textBox5;
+	private: System::Windows::Forms::TextBox^ textBox6;
+	private: System::Windows::Forms::Button^ button9;
+	private: System::Windows::Forms::Label^ label8;
+	private: System::Windows::Forms::Label^ label9;
+	private: System::Windows::Forms::TextBox^ textBox7;
+	private: System::Windows::Forms::TextBox^ textBox8;
+	private: System::Windows::Forms::Label^ label10;
+	private: System::Windows::Forms::Label^ label11;
+	private: System::Windows::Forms::TextBox^ textBox9;
+	private: System::Windows::Forms::Label^ label12;
+	private: System::Windows::Forms::TextBox^ textBox10;
+	private: System::Windows::Forms::DataGridView^ dataGridView1;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Key;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Val;
+
+
+
+
+
+
 
 	private: System::Windows::Forms::Button^ button1;
 
@@ -45,6 +68,11 @@ namespace CppWinForm1 {
 		{
 			InitializeComponent();
 			tabl = NULL;
+			for (int i = 0; i < NumberOfRows; i++)
+			{
+				dataGridView1->Rows->Add();
+			}
+			dataGridView1->AllowUserToAddRows = false;
 			//
 			//TODO: Add the constructor code here
 			//
@@ -58,7 +86,8 @@ namespace CppWinForm1 {
 		{
 			if (components)
 			{
-
+				if (tabl)
+					delete tabl;
 			}
 		}
 	private: System::Windows::Forms::CheckBox^ checkBox1;
@@ -70,9 +99,9 @@ namespace CppWinForm1 {
 	private: System::Windows::Forms::Label^ label1;
 
 	private: System::Windows::Forms::Label^ label2;
-	private: System::Windows::Forms::CheckBox^ checkBox6;
-	private: System::Windows::Forms::CheckBox^ checkBox7;
-	private: System::Windows::Forms::Timer^ timer1;
+
+
+
 	private: System::Windows::Forms::Timer^ timer2;
 	private: System::Windows::Forms::Button^ button2;
 	private: System::Windows::Forms::Button^ button3;
@@ -113,9 +142,6 @@ namespace CppWinForm1 {
 			this->checkBox5 = (gcnew System::Windows::Forms::CheckBox());
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->label2 = (gcnew System::Windows::Forms::Label());
-			this->checkBox6 = (gcnew System::Windows::Forms::CheckBox());
-			this->checkBox7 = (gcnew System::Windows::Forms::CheckBox());
-			this->timer1 = (gcnew System::Windows::Forms::Timer(this->components));
 			this->timer2 = (gcnew System::Windows::Forms::Timer(this->components));
 			this->button2 = (gcnew System::Windows::Forms::Button());
 			this->button3 = (gcnew System::Windows::Forms::Button());
@@ -134,6 +160,24 @@ namespace CppWinForm1 {
 			this->timer5 = (gcnew System::Windows::Forms::Timer(this->components));
 			this->button7 = (gcnew System::Windows::Forms::Button());
 			this->button8 = (gcnew System::Windows::Forms::Button());
+			this->label6 = (gcnew System::Windows::Forms::Label());
+			this->label7 = (gcnew System::Windows::Forms::Label());
+			this->textBox5 = (gcnew System::Windows::Forms::TextBox());
+			this->textBox6 = (gcnew System::Windows::Forms::TextBox());
+			this->button9 = (gcnew System::Windows::Forms::Button());
+			this->label8 = (gcnew System::Windows::Forms::Label());
+			this->label9 = (gcnew System::Windows::Forms::Label());
+			this->textBox7 = (gcnew System::Windows::Forms::TextBox());
+			this->textBox8 = (gcnew System::Windows::Forms::TextBox());
+			this->label10 = (gcnew System::Windows::Forms::Label());
+			this->label11 = (gcnew System::Windows::Forms::Label());
+			this->textBox9 = (gcnew System::Windows::Forms::TextBox());
+			this->label12 = (gcnew System::Windows::Forms::Label());
+			this->textBox10 = (gcnew System::Windows::Forms::TextBox());
+			this->dataGridView1 = (gcnew System::Windows::Forms::DataGridView());
+			this->Key = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Val = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// button1
@@ -142,9 +186,9 @@ namespace CppWinForm1 {
 			this->button1->Font = (gcnew System::Drawing::Font(L"Segoe Script", 15.75F, static_cast<System::Drawing::FontStyle>((System::Drawing::FontStyle::Bold | System::Drawing::FontStyle::Italic)),
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(204)));
 			this->button1->ForeColor = System::Drawing::SystemColors::ControlText;
-			this->button1->Location = System::Drawing::Point(12, 369);
+			this->button1->Location = System::Drawing::Point(7, 448);
 			this->button1->Name = L"button1";
-			this->button1->Size = System::Drawing::Size(461, 38);
+			this->button1->Size = System::Drawing::Size(470, 38);
 			this->button1->TabIndex = 0;
 			this->button1->Text = L"RUN_ALL_TESTS";
 			this->button1->UseVisualStyleBackColor = true;
@@ -156,7 +200,7 @@ namespace CppWinForm1 {
 			this->checkBox1->Font = (gcnew System::Drawing::Font(L"Geometr706 BlkCn BT", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->checkBox1->ForeColor = System::Drawing::SystemColors::ControlDarkDark;
-			this->checkBox1->Location = System::Drawing::Point(16, 48);
+			this->checkBox1->Location = System::Drawing::Point(11, 41);
 			this->checkBox1->Name = L"checkBox1";
 			this->checkBox1->Size = System::Drawing::Size(98, 24);
 			this->checkBox1->TabIndex = 1;
@@ -169,7 +213,7 @@ namespace CppWinForm1 {
 			this->checkBox2->Font = (gcnew System::Drawing::Font(L"Geometr706 BlkCn BT", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->checkBox2->ForeColor = System::Drawing::SystemColors::ControlDarkDark;
-			this->checkBox2->Location = System::Drawing::Point(16, 71);
+			this->checkBox2->Location = System::Drawing::Point(11, 79);
 			this->checkBox2->Name = L"checkBox2";
 			this->checkBox2->Size = System::Drawing::Size(87, 24);
 			this->checkBox2->TabIndex = 2;
@@ -182,7 +226,7 @@ namespace CppWinForm1 {
 			this->checkBox3->Font = (gcnew System::Drawing::Font(L"Geometr706 BlkCn BT", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->checkBox3->ForeColor = System::Drawing::SystemColors::ControlDarkDark;
-			this->checkBox3->Location = System::Drawing::Point(16, 94);
+			this->checkBox3->Location = System::Drawing::Point(11, 117);
 			this->checkBox3->Name = L"checkBox3";
 			this->checkBox3->Size = System::Drawing::Size(87, 24);
 			this->checkBox3->TabIndex = 3;
@@ -195,7 +239,7 @@ namespace CppWinForm1 {
 			this->checkBox4->Font = (gcnew System::Drawing::Font(L"Geometr706 BlkCn BT", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->checkBox4->ForeColor = System::Drawing::SystemColors::ControlDarkDark;
-			this->checkBox4->Location = System::Drawing::Point(16, 117);
+			this->checkBox4->Location = System::Drawing::Point(11, 155);
 			this->checkBox4->Name = L"checkBox4";
 			this->checkBox4->Size = System::Drawing::Size(120, 24);
 			this->checkBox4->TabIndex = 4;
@@ -208,7 +252,7 @@ namespace CppWinForm1 {
 			this->checkBox5->Font = (gcnew System::Drawing::Font(L"Geometr706 BlkCn BT", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->checkBox5->ForeColor = System::Drawing::SystemColors::ControlDarkDark;
-			this->checkBox5->Location = System::Drawing::Point(16, 140);
+			this->checkBox5->Location = System::Drawing::Point(12, 196);
 			this->checkBox5->Name = L"checkBox5";
 			this->checkBox5->Size = System::Drawing::Size(115, 24);
 			this->checkBox5->TabIndex = 5;
@@ -231,42 +275,11 @@ namespace CppWinForm1 {
 			this->label2->AutoSize = true;
 			this->label2->Font = (gcnew System::Drawing::Font(L"Geometr415 Blk BT", 12, System::Drawing::FontStyle::Italic, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->label2->Location = System::Drawing::Point(260, 9);
+			this->label2->Location = System::Drawing::Point(288, 9);
 			this->label2->Name = L"label2";
-			this->label2->Size = System::Drawing::Size(179, 19);
+			this->label2->Size = System::Drawing::Size(158, 19);
 			this->label2->TabIndex = 8;
-			this->label2->Text = L"Select the task method:";
-			// 
-			// checkBox6
-			// 
-			this->checkBox6->AutoSize = true;
-			this->checkBox6->Font = (gcnew System::Drawing::Font(L"Geometr706 BlkCn BT", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->checkBox6->ForeColor = System::Drawing::SystemColors::ControlDarkDark;
-			this->checkBox6->Location = System::Drawing::Point(251, 61);
-			this->checkBox6->Name = L"checkBox6";
-			this->checkBox6->Size = System::Drawing::Size(80, 24);
-			this->checkBox6->TabIndex = 9;
-			this->checkBox6->Text = L"Random";
-			this->checkBox6->UseVisualStyleBackColor = true;
-			// 
-			// checkBox7
-			// 
-			this->checkBox7->AutoSize = true;
-			this->checkBox7->Font = (gcnew System::Drawing::Font(L"Geometr706 BlkCn BT", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->checkBox7->ForeColor = System::Drawing::SystemColors::ControlDarkDark;
-			this->checkBox7->Location = System::Drawing::Point(251, 117);
-			this->checkBox7->Name = L"checkBox7";
-			this->checkBox7->Size = System::Drawing::Size(86, 24);
-			this->checkBox7->TabIndex = 10;
-			this->checkBox7->Text = L"Manually";
-			this->checkBox7->UseVisualStyleBackColor = true;
-			// 
-			// timer1
-			// 
-			this->timer1->Enabled = true;
-			this->timer1->Tick += gcnew System::EventHandler(this, &MyForm::timer1_Tick);
+			this->label2->Text = L"Starting parameters:";
 			// 
 			// timer2
 			// 
@@ -378,7 +391,7 @@ namespace CppWinForm1 {
 			// 
 			// textBox3
 			// 
-			this->textBox3->Location = System::Drawing::Point(237, 89);
+			this->textBox3->Location = System::Drawing::Point(237, 84);
 			this->textBox3->Name = L"textBox3";
 			this->textBox3->Size = System::Drawing::Size(100, 20);
 			this->textBox3->TabIndex = 18;
@@ -387,7 +400,7 @@ namespace CppWinForm1 {
 			// 
 			// textBox4
 			// 
-			this->textBox4->Location = System::Drawing::Point(352, 89);
+			this->textBox4->Location = System::Drawing::Point(352, 84);
 			this->textBox4->Name = L"textBox4";
 			this->textBox4->Size = System::Drawing::Size(100, 20);
 			this->textBox4->TabIndex = 19;
@@ -399,7 +412,7 @@ namespace CppWinForm1 {
 			this->label3->AutoSize = true;
 			this->label3->Font = (gcnew System::Drawing::Font(L"Geometr415 Blk BT", 12, System::Drawing::FontStyle::Italic, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->label3->Location = System::Drawing::Point(348, 63);
+			this->label3->Location = System::Drawing::Point(348, 59);
 			this->label3->Name = L"label3";
 			this->label3->Size = System::Drawing::Size(37, 19);
 			this->label3->TabIndex = 20;
@@ -411,7 +424,7 @@ namespace CppWinForm1 {
 			this->label4->AutoSize = true;
 			this->label4->Font = (gcnew System::Drawing::Font(L"Geometr415 Blk BT", 12, System::Drawing::FontStyle::Italic, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->label4->Location = System::Drawing::Point(233, 63);
+			this->label4->Location = System::Drawing::Point(233, 59);
 			this->label4->Name = L"label4";
 			this->label4->Size = System::Drawing::Size(40, 19);
 			this->label4->TabIndex = 21;
@@ -424,7 +437,7 @@ namespace CppWinForm1 {
 			this->label5->Font = (gcnew System::Drawing::Font(L"Geometr415 Blk BT", 12, System::Drawing::FontStyle::Italic, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->label5->ForeColor = System::Drawing::SystemColors::MenuHighlight;
-			this->label5->Location = System::Drawing::Point(260, 150);
+			this->label5->Location = System::Drawing::Point(254, 117);
 			this->label5->Name = L"label5";
 			this->label5->Size = System::Drawing::Size(163, 19);
 			this->label5->TabIndex = 22;
@@ -441,9 +454,9 @@ namespace CppWinForm1 {
 			this->button7->Font = (gcnew System::Drawing::Font(L"Segoe Script", 15.75F, static_cast<System::Drawing::FontStyle>((System::Drawing::FontStyle::Bold | System::Drawing::FontStyle::Italic)),
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(204)));
 			this->button7->ForeColor = System::Drawing::SystemColors::ControlText;
-			this->button7->Location = System::Drawing::Point(12, 325);
+			this->button7->Location = System::Drawing::Point(7, 404);
 			this->button7->Name = L"button7";
-			this->button7->Size = System::Drawing::Size(461, 38);
+			this->button7->Size = System::Drawing::Size(470, 38);
 			this->button7->TabIndex = 23;
 			this->button7->Text = L"Print a table";
 			this->button7->UseVisualStyleBackColor = true;
@@ -466,28 +479,198 @@ namespace CppWinForm1 {
 			this->button8->Visible = false;
 			this->button8->Click += gcnew System::EventHandler(this, &MyForm::button8_Click);
 			// 
+			// label6
+			// 
+			this->label6->AutoSize = true;
+			this->label6->Font = (gcnew System::Drawing::Font(L"Geometr415 Blk BT", 12, System::Drawing::FontStyle::Italic, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->label6->Location = System::Drawing::Point(222, 199);
+			this->label6->Name = L"label6";
+			this->label6->Size = System::Drawing::Size(107, 19);
+			this->label6->TabIndex = 25;
+			this->label6->Text = L"Effectiveness:";
+			this->label6->Visible = false;
+			// 
+			// label7
+			// 
+			this->label7->AutoSize = true;
+			this->label7->Font = (gcnew System::Drawing::Font(L"Geometr415 Blk BT", 12, System::Drawing::FontStyle::Italic, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->label7->Location = System::Drawing::Point(222, 164);
+			this->label7->Name = L"label7";
+			this->label7->Size = System::Drawing::Size(93, 19);
+			this->label7->TabIndex = 26;
+			this->label7->Text = L"DataCount:";
+			this->label7->Visible = false;
+			// 
+			// textBox5
+			// 
+			this->textBox5->Location = System::Drawing::Point(393, 163);
+			this->textBox5->Name = L"textBox5";
+			this->textBox5->Size = System::Drawing::Size(53, 20);
+			this->textBox5->TabIndex = 27;
+			this->textBox5->Text = L"-10000";
+			// 
+			// textBox6
+			// 
+			this->textBox6->Location = System::Drawing::Point(393, 199);
+			this->textBox6->Name = L"textBox6";
+			this->textBox6->Size = System::Drawing::Size(53, 20);
+			this->textBox6->TabIndex = 28;
+			this->textBox6->Text = L"10000";
+			// 
+			// button9
+			// 
+			this->button9->BackColor = System::Drawing::SystemColors::Window;
+			this->button9->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			this->button9->Font = (gcnew System::Drawing::Font(L"Times New Roman", 12, static_cast<System::Drawing::FontStyle>((System::Drawing::FontStyle::Bold | System::Drawing::FontStyle::Italic)),
+				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(204)));
+			this->button9->ForeColor = System::Drawing::SystemColors::ControlText;
+			this->button9->Location = System::Drawing::Point(267, 226);
+			this->button9->Name = L"button9";
+			this->button9->Size = System::Drawing::Size(166, 29);
+			this->button9->TabIndex = 29;
+			this->button9->Text = L"Clear effectiveness";
+			this->button9->UseVisualStyleBackColor = false;
+			this->button9->Visible = false;
+			this->button9->Click += gcnew System::EventHandler(this, &MyForm::button9_Click);
+			// 
+			// label8
+			// 
+			this->label8->AutoSize = true;
+			this->label8->Font = (gcnew System::Drawing::Font(L"Geometr415 Blk BT", 12, System::Drawing::FontStyle::Italic, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->label8->Location = System::Drawing::Point(222, 61);
+			this->label8->Name = L"label8";
+			this->label8->Size = System::Drawing::Size(42, 19);
+			this->label8->TabIndex = 30;
+			this->label8->Text = L"Size:";
+			// 
+			// label9
+			// 
+			this->label9->AutoSize = true;
+			this->label9->Font = (gcnew System::Drawing::Font(L"Geometr415 Blk BT", 12, System::Drawing::FontStyle::Italic, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->label9->Location = System::Drawing::Point(222, 92);
+			this->label9->Name = L"label9";
+			this->label9->Size = System::Drawing::Size(134, 19);
+			this->label9->TabIndex = 31;
+			this->label9->Text = L"Start DataCount:";
+			// 
+			// textBox7
+			// 
+			this->textBox7->Location = System::Drawing::Point(362, 60);
+			this->textBox7->Name = L"textBox7";
+			this->textBox7->Size = System::Drawing::Size(84, 20);
+			this->textBox7->TabIndex = 32;
+			this->textBox7->Text = L"400";
+			// 
+			// textBox8
+			// 
+			this->textBox8->Location = System::Drawing::Point(362, 92);
+			this->textBox8->Name = L"textBox8";
+			this->textBox8->Size = System::Drawing::Size(84, 20);
+			this->textBox8->TabIndex = 33;
+			this->textBox8->Text = L"200";
+			// 
+			// label10
+			// 
+			this->label10->AutoSize = true;
+			this->label10->Font = (gcnew System::Drawing::Font(L"Geometr415 Blk BT", 12, System::Drawing::FontStyle::Italic, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->label10->Location = System::Drawing::Point(254, 136);
+			this->label10->Name = L"label10";
+			this->label10->Size = System::Drawing::Size(170, 19);
+			this->label10->TabIndex = 34;
+			this->label10->Text = L"Key range boundaries:";
+			// 
+			// label11
+			// 
+			this->label11->AutoSize = true;
+			this->label11->Font = (gcnew System::Drawing::Font(L"Geometr415 Blk BT", 12, System::Drawing::FontStyle::Italic, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->label11->Location = System::Drawing::Point(222, 162);
+			this->label11->Name = L"label11";
+			this->label11->Size = System::Drawing::Size(51, 19);
+			this->label11->TabIndex = 35;
+			this->label11->Text = L"From:";
+			// 
+			// textBox9
+			// 
+			this->textBox9->Location = System::Drawing::Point(393, 165);
+			this->textBox9->Name = L"textBox9";
+			this->textBox9->Size = System::Drawing::Size(53, 20);
+			this->textBox9->TabIndex = 36;
+			this->textBox9->Text = L"0";
+			this->textBox9->Visible = false;
+			// 
+			// label12
+			// 
+			this->label12->AutoSize = true;
+			this->label12->Font = (gcnew System::Drawing::Font(L"Geometr415 Blk BT", 12, System::Drawing::FontStyle::Italic, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->label12->Location = System::Drawing::Point(222, 198);
+			this->label12->Name = L"label12";
+			this->label12->Size = System::Drawing::Size(61, 19);
+			this->label12->TabIndex = 37;
+			this->label12->Text = L"Before:";
+			// 
+			// textBox10
+			// 
+			this->textBox10->Location = System::Drawing::Point(393, 200);
+			this->textBox10->Name = L"textBox10";
+			this->textBox10->Size = System::Drawing::Size(53, 20);
+			this->textBox10->TabIndex = 38;
+			this->textBox10->Text = L"0";
+			this->textBox10->Visible = false;
+			// 
+			// dataGridView1
+			// 
+			this->dataGridView1->AllowUserToDeleteRows = false;
+			this->dataGridView1->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
+			this->dataGridView1->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(2) { this->Key, this->Val });
+			this->dataGridView1->Location = System::Drawing::Point(7, 273);
+			this->dataGridView1->Name = L"dataGridView1";
+			this->dataGridView1->ReadOnly = true;
+			this->dataGridView1->Size = System::Drawing::Size(470, 125);
+			this->dataGridView1->TabIndex = 39;
+			this->dataGridView1->Visible = false;
+			// 
+			// Key
+			// 
+			this->Key->HeaderText = L"Key";
+			this->Key->Name = L"Key";
+			this->Key->ReadOnly = true;
+			this->Key->Width = 215;
+			// 
+			// Val
+			// 
+			this->Val->HeaderText = L"Val";
+			this->Val->Name = L"Val";
+			this->Val->ReadOnly = true;
+			this->Val->Width = 215;
+			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::SystemColors::Window;
-			this->ClientSize = System::Drawing::Size(485, 419);
-			this->Controls->Add(this->button8);
+			this->ClientSize = System::Drawing::Size(485, 498);
+			this->Controls->Add(this->dataGridView1);
+			this->Controls->Add(this->label10);
+			this->Controls->Add(this->textBox8);
+			this->Controls->Add(this->textBox7);
+			this->Controls->Add(this->label9);
+			this->Controls->Add(this->label8);
+			this->Controls->Add(this->button9);
+			this->Controls->Add(this->label7);
+			this->Controls->Add(this->label6);
 			this->Controls->Add(this->button7);
 			this->Controls->Add(this->label5);
 			this->Controls->Add(this->label4);
 			this->Controls->Add(this->label3);
 			this->Controls->Add(this->textBox4);
 			this->Controls->Add(this->textBox3);
-			this->Controls->Add(this->textBox2);
-			this->Controls->Add(this->textBox1);
-			this->Controls->Add(this->button6);
-			this->Controls->Add(this->button5);
-			this->Controls->Add(this->button4);
-			this->Controls->Add(this->button3);
-			this->Controls->Add(this->button2);
-			this->Controls->Add(this->checkBox7);
-			this->Controls->Add(this->checkBox6);
 			this->Controls->Add(this->label2);
 			this->Controls->Add(this->label1);
 			this->Controls->Add(this->checkBox5);
@@ -496,9 +679,24 @@ namespace CppWinForm1 {
 			this->Controls->Add(this->checkBox2);
 			this->Controls->Add(this->checkBox1);
 			this->Controls->Add(this->button1);
+			this->Controls->Add(this->textBox1);
+			this->Controls->Add(this->button6);
+			this->Controls->Add(this->button2);
+			this->Controls->Add(this->button3);
+			this->Controls->Add(this->button4);
+			this->Controls->Add(this->textBox2);
+			this->Controls->Add(this->button5);
+			this->Controls->Add(this->button8);
+			this->Controls->Add(this->label11);
+			this->Controls->Add(this->label12);
+			this->Controls->Add(this->textBox9);
+			this->Controls->Add(this->textBox10);
+			this->Controls->Add(this->textBox5);
+			this->Controls->Add(this->textBox6);
 			this->Name = L"MyForm";
 			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
 			this->Text = L"MyForm";
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -508,86 +706,96 @@ namespace CppWinForm1 {
 		Process^ proc = Process::Start("..\\Debug\\TestTable.exe");
 		proc->WaitForExit();
 	}
-	private: System::Void timer1_Tick(System::Object^ sender, System::EventArgs^ e) {
-		if (this->checkBox6->Checked == true || this->checkBox7->Checked == true)
-		{
-			this->timer1->Enabled = false;
-			this->checkBox6->Visible = false;
-			this->checkBox7->Visible = false;
-			if (this->checkBox6->Checked == true)
-			{
-				this->label2->Text = Convert::ToString("Random filling in the table");
-				this->checkBox6->Checked == false;
-			}
-			else
-			{
-				this->label2->Text = Convert::ToString("Manually filling in the table");
-				this->label5->Visible = true;
-				this->timer5->Enabled = true;
-				this->checkBox7->Checked == false;
-				this->label3->Visible = true;
-				this->label4->Visible = true;
-				this->textBox3->Visible = true;
-				this->textBox4->Visible = true;
-			}
-		}
-	}
 
 	private: System::Void timer2_Tick(System::Object^ sender, System::EventArgs^ e) {
-		if (this->checkBox1->Checked == true || this->checkBox2->Checked == true || this->checkBox3->Checked == true || this->checkBox4->Checked == true || this->checkBox5->Checked == true)
-		{
-			this->checkBox1->Visible = false;
-			this->checkBox2->Visible = false;
-			this->checkBox3->Visible = false;
-			this->checkBox4->Visible = false;
-			this->checkBox5->Visible = false;
-			this->button2->Visible = true;
-			this->button3->Visible = true;
-			this->button4->Visible = true;
-			this->button5->Visible = true;
-			this->button6->Visible = true;
-			this->button7->Visible = true;
-			this->button8->Visible = true;
-			while (true)
+		if(this)
+			if (this->checkBox1->Checked == true || this->checkBox2->Checked == true || this->checkBox3->Checked == true || this->checkBox4->Checked == true || this->checkBox5->Checked == true)
 			{
+				this->checkBox1->Visible = false;
+				this->checkBox2->Visible = false;
+				this->checkBox3->Visible = false;
+				this->checkBox4->Visible = false;
+				this->checkBox5->Visible = false;
+				this->button2->Visible = true;
+				this->button3->Visible = true;
+				this->button4->Visible = true;
+				this->button5->Visible = true;
+				this->button6->Visible = true;
+				this->button7->Visible = true;
+				this->button8->Visible = true;
+				this->button9->Visible = true;
+				this->label2->Text = Convert::ToString("Enter a record");
+				this->label3->Visible = true;
+				this->label4->Visible = true;
+				this->label5->Visible = true;
+				this->label6->Visible = true;
+				this->label7->Visible = true;
+				this->label8->Visible = false;
+				this->label9->Visible = false;
+				this->label10->Visible = false;
+				this->label11->Visible = false;
+				this->label12->Visible = false;
+				this->textBox3->Visible = true;
+				this->textBox4->Visible = true;
+				this->textBox5->Visible = false;
+				this->textBox6->Visible = false;
+				this->textBox7->Visible = false;
+				this->textBox8->Visible = false;
+				this->textBox9->Visible = true;
+				this->textBox10->Visible = true;
+				std::string size = msclr::interop::marshal_as<std::string>(this->textBox7->Text);
 				if (this->checkBox1->Checked == true)
 				{
-					tabl = new TScamTable;
+					tabl = new TScamTable(stoi(size));
 					this->label1->Text = Convert::ToString("ScamTable");
 					this->checkBox1->Checked = false;
-					break;
 				}
 				else if (this->checkBox2->Checked == true)
 				{
-					tabl = new TSortTable;
+					tabl = new TSortTable(stoi(size));
 					this->label1->Text = Convert::ToString("SortTable");
 					this->checkBox2->Checked = false;
-					break;
 				}
 				else if (this->checkBox3->Checked == true)
 				{
 					tabl = new TTreeTable;
 					this->label1->Text = Convert::ToString("TreeTable");
 					this->checkBox3->Checked = false;
-					break;
 				}
 				else if (this->checkBox4->Checked == true)
 				{
-					tabl = new THashTableStep;
+					int step = 3;
+					for (int i = 3; i < stoi(size); i++)
+					{
+						if (stoi(size) % i)
+						{
+							step = i;
+							break;
+						}
+					}
+					tabl = new THashTableStep(stoi(size), step);
 					this->label1->Text = Convert::ToString("HashTableStep");
 					this->checkBox4->Checked = false;
-					break;
 				}
-				else
+				else if (this->checkBox5->Checked == true)
 				{
-					tabl = new THashTableList;
+					tabl = new THashTableList(stoi(size));
 					this->label1->Text = Convert::ToString("HashTableList");
-					this->checkBox5->Checked == false;
-					break;
+					this->checkBox5->Checked = false;
 				}
+				std::string random = msclr::interop::marshal_as<std::string>(this->textBox8->Text);
+				std::string start = msclr::interop::marshal_as<std::string>(this->textBox5->Text);
+				std::string finish = msclr::interop::marshal_as<std::string>(this->textBox6->Text);
+				for (int i = 0; i < min(stoi(random), stoi(size)); i++)
+				{
+					int key = stoi(start) + (stoi(finish) - stoi(start)) * (int)(rand()) / RAND_MAX;
+					int val = stoi(start) + (stoi(finish) - stoi(start)) * (int)(rand()) / RAND_MAX;
+					TRecord tmp(key, val);
+					tabl->Insert(tmp);
+				}
+				this->timer2->Enabled = false;
+				this->timer5->Enabled = true;
 			}
-			this->timer2->Enabled = false;
-		}
 	}
 private: System::Void button6_Click(System::Object^ sender, System::EventArgs^ e) {
 	this->button6->Visible = false;
@@ -607,10 +815,13 @@ private: System::Void button5_Click(System::Object^ sender, System::EventArgs^ e
 			if (file)
 				if(tabl)
 					tabl->ReadFile(s);
-			this->timer3->Enabled = false;
-			this->textBox1->Visible = false;
-			this->button6->Visible = true;
-			this->textBox1->Text = "";
+			if (this)
+			{
+				this->timer3->Enabled = false;
+				this->textBox1->Visible = false;
+				this->button6->Visible = true;
+				this->textBox1->Text = "";
+			}
 		}
 	}
 private: System::Void timer4_Tick(System::Object^ sender, System::EventArgs^ e) {
@@ -622,17 +833,20 @@ private: System::Void timer4_Tick(System::Object^ sender, System::EventArgs^ e) 
 		{
 			if (tabl)
 				tabl->SaveFile(s);
-			this->timer4->Enabled = false;
-			this->textBox2->Visible = false;
-			this->button5->Visible = true;
-			this->textBox1->Text = "";
+			if (this)
+			{
+				this->timer4->Enabled = false;
+				this->textBox2->Visible = false;
+				this->button5->Visible = true;
+				this->textBox2->Text = "";
+			}
 		}
 	}
 }
 private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
 	 std::string key= msclr::interop::marshal_as<std::string>(this->textBox3->Text);
 	 //std::string val= msclr::interop::marshal_as<std::string>(this->textBox4->Text);
-	 if (tabl)
+	 if (tabl && this)
 	 {
 		 bool flag = tabl->Find(stoi(key));
 		 if (flag)
@@ -647,7 +861,7 @@ private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e
 	std::string key = msclr::interop::marshal_as<std::string>(this->textBox3->Text);
 	std::string val= msclr::interop::marshal_as<std::string>(this->textBox4->Text);
 	TRecord tmp(stoi(key), stoi(val));
-	if (tabl)
+	if (tabl && this)
 	{
 		bool flag = tabl->Insert(tmp);
 		if (flag)
@@ -659,20 +873,21 @@ private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e
 }
 private: System::Void button4_Click(System::Object^ sender, System::EventArgs^ e) {
 	std::string key = msclr::interop::marshal_as<std::string>(this->textBox3->Text);
-	std::string val = msclr::interop::marshal_as<std::string>(this->textBox4->Text);
-	if (tabl)
+	//std::string val = msclr::interop::marshal_as<std::string>(this->textBox4->Text);
+	if (tabl && this)
 	{
 		bool flag = tabl->Delete(stoi(key));
 		if (flag)
 			this->label5->Text = Convert::ToString("Record deleted");
 		else
 			this->label5->Text = Convert::ToString("Record not deleted");
-
 	}
 }
 private: System::Void timer5_Tick(System::Object^ sender, System::EventArgs^ e) {
-	if (tabl)
+	if (tabl && this)
 	{
+		this->textBox9->Text = Convert::ToString(tabl->GetData());
+		this->textBox10->Text = Convert::ToString(tabl->GetEff());
 		if (tabl->IsEmpty())
 			this->button4->Enabled = false;
 		else
@@ -681,16 +896,29 @@ private: System::Void timer5_Tick(System::Object^ sender, System::EventArgs^ e) 
 			this->button3->Enabled = false;
 		else
 			this->button3->Enabled = true;
-		if (tabl->GetData() > 10)
+		if (tabl->GetData() >= NumberOfRows)
 			this->button7->Enabled = false;
+		else
+			this->button7->Enabled =true;
 	}
 }
 private: System::Void button7_Click(System::Object^ sender, System::EventArgs^ e) {
-	if (tabl)
-		tabl->Print();
+	if (tabl && this)
+	{
+		this->dataGridView1->Visible = true;
+		int i = 0;
+		for (tabl->Reset(); !tabl->IsEnd(); tabl->GoNext())
+		{
+			dataGridView1->Rows[i]->Cells[0]->Value = (tabl->GetCurr().GetKey()).ToString();
+			dataGridView1->Rows[i]->Cells[1]->Value = (tabl->GetCurr().GetVal()).ToString();
+			i++;
+		}
+	}
 }
 private: System::Void button8_Click(System::Object^ sender, System::EventArgs^ e) {
+	this->timer5->Enabled = false;
 	delete tabl;
+	tabl = NULL;
 	this->checkBox1->Visible = true;
 	this->checkBox2->Visible = true;
 	this->checkBox3->Visible = true;
@@ -703,7 +931,40 @@ private: System::Void button8_Click(System::Object^ sender, System::EventArgs^ e
 	this->button6->Visible = false;
 	this->button7->Visible = false;
 	this->button8->Visible = false;
+	this->button9->Visible = false;
+	this->label2->Text = Convert::ToString("Starting parameters:");
+	this->label1->Text = Convert::ToString("Select a table type:");
+	this->label3->Visible = false;
+	this->label4->Visible = false;
+	this->label5->Visible = false;
+	this->label6->Visible = false;
+	this->label7->Visible = false;
+	this->label8->Visible = true;
+	this->label9->Visible = true;
+	this->label10->Visible = true;
+	this->label11->Visible = true;
+	this->label12->Visible = true;
+	this->textBox3->Visible = false;
+	this->textBox4->Visible = false;
+	this->textBox5->Visible = true;
+	this->textBox6->Visible = true;
+	this->textBox7->Visible = true;
+	this->textBox8->Visible = true;
+	this->textBox9->Visible = false;
+	this->textBox10->Visible = false;
+	this->dataGridView1->Visible = false;
+	for (int i = 0; i < NumberOfRows; i++)
+	{
+		this->dataGridView1->Rows[i]->Cells[0]->Value = "";
+		this->dataGridView1->Rows[i]->Cells[1]->Value = "";
+	}
+	this->label5->Text = Convert::ToString("Waiting for an action");
 	this->timer2->Enabled = true;
+}
+
+private: System::Void button9_Click(System::Object^ sender, System::EventArgs^ e) {
+	if (tabl)
+		tabl->ClearEff();
 }
 };
 }

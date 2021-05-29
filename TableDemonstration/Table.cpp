@@ -74,13 +74,14 @@ void TTable::SaveFile(std::string filename)
 	for (Reset(); !IsEnd(); GoNext())
 	{
 		tmp = this->GetCurr();
-		ofs << tmp.GetKey() << ' ' << tmp.GetVal() << '\n';
+		ofs << '\n'<< tmp.GetKey() << ' ' << tmp.GetVal();
 	}
 }
 void TTable::ReadFile(std::string filename)
 {
 	std::ifstream ifs(filename);
 	char buff[BUFF_SIZE];
+	//ifs.getline(buff, BUFF_SIZE, ' ');
 	while (!ifs.eof())
 	{
 		ifs.getline(buff, BUFF_SIZE, ' ');
@@ -272,7 +273,6 @@ bool TSortTable::Insert(const TRecord& rec)
 		throw 0;
 	if (!Find(rec.GetKey()))
 	{
-		Eff++;
 		for (std::size_t i = DataCount++; i > curr; i--)
 		{
 			Eff++;
@@ -620,6 +620,7 @@ bool THashTableList::Find(const TKey& key)
 		else
 			return true;
 	}
+	if (Eff == 0) Eff = 1;
 	return false;
 }
 bool THashTableList::Insert(const TRecord& rec)
@@ -697,6 +698,7 @@ TTreeTable::~TTreeTable()
 	while (!st.empty())
 		st.pop();
 	pCurr = pRoot;
+	st.push(pCurr);
 	while (!st.empty())
 	{
 		pCurr = st.top();
@@ -726,7 +728,7 @@ TRecord TTreeTable::GetCurr()
 		return pCurr->GetRec();
 	}
 	else
-		throw NULL;
+		throw 0;
 }
 bool TTreeTable::Find(const TKey& key)
 {
@@ -832,21 +834,23 @@ void TTreeTable::Reset()
 {
 	while (!st.empty())
 		st.pop();
-	pCurr = pRoot;
+	TNode* tmp=pCurr = pRoot;
 	found_now = 0;
 	if (pCurr) {
-		while (pCurr->pLeft)
-			pCurr = pCurr->pLeft;
-		found_now++;
+		while (tmp) 
+		{
+			st.push(tmp);
+			pCurr = tmp;
+			tmp = tmp->pLeft;
+		}
 	}
 }
 void TTreeTable::GoNext()
 {
-	if (pCurr)
-	{
+	if (pCurr) {
 		TNode* tmp = pCurr = pCurr->pRight;
-		if(!st.empty())
-		st.pop();
+		if (!st.empty())
+			st.pop();
 		while (tmp)
 		{
 			st.push(tmp);
@@ -856,7 +860,7 @@ void TTreeTable::GoNext()
 		if (!pCurr && !st.empty())
 		{
 			pCurr = st.top();
-			st.pop();
+			//st.pop();
 		}
 		found_now++;
 	}
