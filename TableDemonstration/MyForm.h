@@ -45,6 +45,7 @@ namespace CppWinForm1 {
 	private: System::Windows::Forms::DataGridView^ dataGridView1;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Key;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Val;
+	private: System::Windows::Forms::CheckBox^ checkBox6;
 
 
 
@@ -176,6 +177,7 @@ namespace CppWinForm1 {
 			this->dataGridView1 = (gcnew System::Windows::Forms::DataGridView());
 			this->Key = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->Val = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->checkBox6 = (gcnew System::Windows::Forms::CheckBox());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->BeginInit();
 			this->SuspendLayout();
 			// 
@@ -649,12 +651,28 @@ namespace CppWinForm1 {
 			this->Val->ReadOnly = true;
 			this->Val->Width = 215;
 			// 
+			// checkBox6
+			// 
+			this->checkBox6->AutoSize = true;
+			this->checkBox6->Cursor = System::Windows::Forms::Cursors::Default;
+			this->checkBox6->Enabled = false;
+			this->checkBox6->Font = (gcnew System::Drawing::Font(L"Geometr706 BlkCn BT", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->checkBox6->ForeColor = System::Drawing::SystemColors::ControlDarkDark;
+			this->checkBox6->Location = System::Drawing::Point(12, 231);
+			this->checkBox6->Name = L"checkBox6";
+			this->checkBox6->Size = System::Drawing::Size(105, 24);
+			this->checkBox6->TabIndex = 40;
+			this->checkBox6->Text = L"BalanceTree";
+			this->checkBox6->UseVisualStyleBackColor = true;
+			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::SystemColors::Window;
 			this->ClientSize = System::Drawing::Size(485, 498);
+			this->Controls->Add(this->checkBox6);
 			this->Controls->Add(this->dataGridView1);
 			this->Controls->Add(this->label10);
 			this->Controls->Add(this->textBox8);
@@ -715,6 +733,7 @@ namespace CppWinForm1 {
 				this->checkBox3->Visible = false;
 				this->checkBox4->Visible = false;
 				this->checkBox5->Visible = false;
+				this->checkBox6->Visible = false;
 				this->button2->Visible = true;
 				this->button3->Visible = true;
 				this->button4->Visible = true;
@@ -945,6 +964,7 @@ private: System::Void button8_Click(System::Object^ sender, System::EventArgs^ e
 	this->checkBox3->Visible = true;
 	this->checkBox4->Visible = true;
 	this->checkBox5->Visible = true;
+	this->checkBox6->Visible = true;
 	this->button2->Visible = false;
 	this->button3->Visible = false;
 	this->button4->Visible = false;
