@@ -67,9 +67,8 @@ void TTable::Print()
 		std::cout << '[' << tmp.GetKey() << ']' << tmp.GetVal() << ' ';
 	}
 }
-void TTable::SaveFile(std::string filename)
+void TTable::SaveFile(std::ofstream& ofs)
 {
-	std::ofstream ofs(filename);
 	TRecord tmp;
 	for (Reset(); !IsEnd(); GoNext())
 	{
@@ -77,9 +76,8 @@ void TTable::SaveFile(std::string filename)
 		ofs << '\n'<< tmp.GetKey() << ' ' << tmp.GetVal();
 	}
 }
-void TTable::ReadFile(std::string filename)
+void TTable::ReadFile(std::ifstream& ifs)
 {
-	std::ifstream ifs(filename);
 	char buff[BUFF_SIZE];
 	//ifs.getline(buff, BUFF_SIZE, ' ');
 	while (!ifs.eof())
@@ -679,12 +677,14 @@ TNode::TNode()
 {
 	rec.InsRec(0, 0);
 	pLeft = pRight = NULL;
+	height = level = 0;
 }
 TNode::TNode(TRecord r, TNode* pl, TNode* pr)
 {
 	rec = r;
 	pLeft = pl;
 	pRight = pr;
+	height = level = 0;
 }
 TRecord TNode::GetRec() const
 {
@@ -693,6 +693,22 @@ TRecord TNode::GetRec() const
 void TNode::InsRec(const TRecord& r)
 {
 	rec = r;
+}
+int TNode::GetHeight()const
+{
+	return height;
+}
+int TNode::GetLevel()const
+{
+	return level;
+}
+void TNode::InsHeight(int h)
+{
+	height = h;
+}
+void TNode::InsLevel(int l)
+{
+	level = l;
 }
 //TTreeTable metods
 TTreeTable::TTreeTable()
@@ -896,4 +912,74 @@ void TTreeTable::GoNext()
 bool TTreeTable::IsEnd()
 {
 	return found_now == DataCount;
+}
+void TTreeTable::PrintTree(std::ofstream& ofs)
+{
+	if (pRoot != 0)
+	{
+		std::vector<TNode*> print;
+		while (!st.empty())
+			st.pop();
+		pRoot->InsLevel(4*DataCount);
+		st.push(pRoot);
+		while (!st.empty())
+		{
+			pCurr = st.top();
+			st.pop();
+			print.push_back(pCurr);
+			if (pCurr->pLeft)
+			{
+				pCurr->pLeft->InsLevel(pCurr->GetLevel() - 3);
+				pCurr->pLeft->InsHeight(pCurr->GetHeight() + 1);
+				st.push(pCurr->pLeft);
+			}
+			if (pCurr->pRight)
+			{
+				pCurr->pRight->InsLevel(pCurr->GetLevel() + 3);
+				pCurr->pRight->InsHeight(pCurr->GetHeight() + 1);
+				st.push(pCurr->pRight);
+			}
+		}
+		for (int i = 0; i < print.size(); i++)
+		{
+			for (int j = i; j < print.size(); j++)
+			{
+				if (print[j]->GetHeight() < print[i]->GetHeight())
+				{
+					TNode* tmp = print[j];
+					print[j] = print[i];
+					print[i] = tmp;
+				}
+				else if (print[j]->GetHeight() == print[i]->GetHeight() && print[j]->GetLevel() < print[i]->GetLevel())
+				{
+					TNode* tmp = print[j];
+					print[j] = print[i];
+					print[i] = tmp;
+				}
+				else if (print[j]->GetHeight() == print[i]->GetHeight() && print[j]->GetLevel() == print[i]->GetLevel())
+				{
+					print[std::max(i, j)]->InsLevel(print[j]->GetLevel() + 1);
+				}
+			}
+		}
+		int i = 0;
+		while (i < print.size())
+		{
+			int CurrHeight = print[i]->GetHeight();
+			int CurrLevel = 0;
+			int add = 0;
+			while (i < print.size() && print[i]->GetHeight() == CurrHeight)
+			{
+				for (int j = CurrLevel+add; j < print[i]->GetLevel()+add; j++)
+					ofs << ' ';
+				ofs << print[i]->GetRec().GetKey()<<';';
+				add += 2;
+				for (int j = 10; print[i]->GetRec().GetKey() > j; j++)
+					add++;
+				CurrLevel = print[i]->GetLevel() + add;
+				i++;
+			}
+			ofs << '\n';
+		}
+	}
 }

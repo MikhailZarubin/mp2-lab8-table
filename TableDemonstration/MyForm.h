@@ -814,7 +814,7 @@ private: System::Void button5_Click(System::Object^ sender, System::EventArgs^ e
 			std::ifstream file(s);
 			if (file)
 				if(tabl)
-					tabl->ReadFile(s);
+					tabl->ReadFile(file);
 			if (this)
 			{
 				this->timer3->Enabled = false;
@@ -832,7 +832,22 @@ private: System::Void timer4_Tick(System::Object^ sender, System::EventArgs^ e) 
 		if (file)
 		{
 			if (tabl)
-				tabl->SaveFile(s);
+			{
+				tabl->SaveFile(file);
+				TTreeTable* tmp = dynamic_cast<TTreeTable*>(tabl);
+				if (tmp != NULL)
+				{
+					std::string sTree = "";
+					for (int i = 0; s[i] != '.'; i++)
+					{
+						sTree += s[i];
+					}
+					sTree += "Tree.txt";
+					std::ofstream fileTree(sTree);
+					if (fileTree)
+						tmp->PrintTree(fileTree);
+				}
+			}
 			if (this)
 			{
 				this->timer4->Enabled = false;

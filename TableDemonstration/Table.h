@@ -4,6 +4,7 @@
 #include<fstream>
 #include<algorithm>
 #include<stack>
+#include<vector>
 
 //redefining types
 typedef int TKey;
@@ -43,7 +44,12 @@ public:
 class TNode{
 protected:
 	TRecord rec;
+	int height, level;
 public:
+	int GetHeight() const;
+	int GetLevel() const;
+	void InsHeight(int h);
+	void InsLevel(int l);
 	TNode();
 	TNode(TRecord r, TNode* pl = NULL, TNode* pr = NULL);
 	TNode* pLeft, * pRight;
@@ -68,8 +74,8 @@ public:
 	virtual void GoNext() = 0;
 	virtual bool IsEnd() = 0;
     void Print();
-	void ReadFile(std::string filename);
-	void SaveFile(std::string filename);
+	void ReadFile(std::ifstream& ifs);
+	void SaveFile(std::ofstream& ofs);
 	virtual TRecord GetCurr() = 0;
 	std::size_t GetEff() const;
 	int GetData() const;
@@ -131,6 +137,7 @@ public:
 	void GoNext() override;
 	bool IsEnd() override;
 	TRecord GetCurr() override;
+	void PrintTree(std::ofstream& ofs);
 };
 //
 class THashTableStep : public TTable
