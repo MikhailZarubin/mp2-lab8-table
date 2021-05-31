@@ -14,6 +14,7 @@ typedef int TVal;
 const int OCCUP = 0;
 const int FREE = -1;
 const int DEL = -2;
+const int PrintTreeStep = 3;
 const std::size_t START_SIZE = 10;
 const std::size_t BUFF_SIZE = 20;
 

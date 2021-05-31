@@ -922,6 +922,7 @@ void TTreeTable::PrintTree(std::ofstream& ofs)
 			st.pop();
 		pRoot->InsLevel(4*DataCount);
 		st.push(pRoot);
+		int tmp = (log(DataCount) + 2);
 		while (!st.empty())
 		{
 			pCurr = st.top();
@@ -929,20 +930,20 @@ void TTreeTable::PrintTree(std::ofstream& ofs)
 			print.push_back(pCurr);
 			if (pCurr->pLeft)
 			{
-				pCurr->pLeft->InsLevel(pCurr->GetLevel() - 3);
 				pCurr->pLeft->InsHeight(pCurr->GetHeight() + 1);
+				pCurr->pLeft->InsLevel(pCurr->GetLevel() - PrintTreeStep - std::max(0, (tmp - pCurr->pLeft->GetHeight())));
 				st.push(pCurr->pLeft);
 			}
 			if (pCurr->pRight)
 			{
-				pCurr->pRight->InsLevel(pCurr->GetLevel() + 3);
 				pCurr->pRight->InsHeight(pCurr->GetHeight() + 1);
+				pCurr->pRight->InsLevel(pCurr->GetLevel() + PrintTreeStep + std::max(0, (tmp - pCurr->pRight->GetHeight())));
 				st.push(pCurr->pRight);
 			}
 		}
 		for (int i = 0; i < print.size(); i++)
 		{
-			for (int j = i; j < print.size(); j++)
+			for (int j = i+1; j < print.size(); j++)
 			{
 				if (print[j]->GetHeight() < print[i]->GetHeight())
 				{
@@ -958,7 +959,10 @@ void TTreeTable::PrintTree(std::ofstream& ofs)
 				}
 				else if (print[j]->GetHeight() == print[i]->GetHeight() && print[j]->GetLevel() == print[i]->GetLevel())
 				{
-					print[std::max(i, j)]->InsLevel(print[j]->GetLevel() + 1);
+					if (print[i]->GetRec().GetKey() > print[j]->GetRec().GetKey())
+						print[i]->InsLevel(print[i]->GetLevel() + 2);
+					else
+						print[j]->InsLevel(print[j]->GetLevel() + 2);
 				}
 			}
 		}
@@ -966,17 +970,17 @@ void TTreeTable::PrintTree(std::ofstream& ofs)
 		while (i < print.size())
 		{
 			int CurrHeight = print[i]->GetHeight();
-			int CurrLevel = 0;
 			int add = 0;
+			int CurrLevel = 0;
 			while (i < print.size() && print[i]->GetHeight() == CurrHeight)
 			{
-				for (int j = CurrLevel+add; j < print[i]->GetLevel()+add; j++)
+				for (int j = CurrLevel+add; j < print[i]->GetLevel(); j++)
 					ofs << ' ';
 				ofs << print[i]->GetRec().GetKey()<<';';
-				add += 2;
-				for (int j = 10; print[i]->GetRec().GetKey() > j; j++)
+				add = 2;
+				for (int j = 10; print[i]->GetRec().GetKey() > j; j *= 10)
 					add++;
-				CurrLevel = print[i]->GetLevel() + add;
+				CurrLevel = print[i]->GetLevel();
 				i++;
 			}
 			ofs << '\n';

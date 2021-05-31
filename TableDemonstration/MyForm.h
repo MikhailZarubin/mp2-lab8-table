@@ -19,6 +19,7 @@ namespace CppWinForm1 {
 	public ref class MyForm : public System::Windows::Forms::Form
 	{
 		TTable* tabl;
+
 	private: System::Windows::Forms::TextBox^ textBox3;
 	private: System::Windows::Forms::TextBox^ textBox4;
 	private: System::Windows::Forms::Label^ label3;
@@ -86,8 +87,6 @@ namespace CppWinForm1 {
 		{
 			if (components)
 			{
-				if (tabl)
-					delete tabl;
 			}
 		}
 	private: System::Windows::Forms::CheckBox^ checkBox1;
@@ -846,7 +845,9 @@ private: System::Void timer4_Tick(System::Object^ sender, System::EventArgs^ e) 
 					std::ofstream fileTree(sTree);
 					if (fileTree)
 						tmp->PrintTree(fileTree);
+					tmp = NULL;
 				}
+				
 			}
 			if (this)
 			{
