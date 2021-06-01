@@ -655,7 +655,6 @@ namespace CppWinForm1 {
 			// 
 			this->checkBox6->AutoSize = true;
 			this->checkBox6->Cursor = System::Windows::Forms::Cursors::Default;
-			this->checkBox6->Enabled = false;
 			this->checkBox6->Font = (gcnew System::Drawing::Font(L"Geometr706 BlkCn BT", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->checkBox6->ForeColor = System::Drawing::SystemColors::ControlDarkDark;
@@ -726,7 +725,7 @@ namespace CppWinForm1 {
 
 	private: System::Void timer2_Tick(System::Object^ sender, System::EventArgs^ e) {
 		if(this)
-			if (this->checkBox1->Checked == true || this->checkBox2->Checked == true || this->checkBox3->Checked == true || this->checkBox4->Checked == true || this->checkBox5->Checked == true)
+			if (this->checkBox1->Checked == true || this->checkBox2->Checked == true || this->checkBox3->Checked == true || this->checkBox4->Checked == true || this->checkBox5->Checked == true || this->checkBox6->Checked==true)
 			{
 				this->checkBox1->Visible = false;
 				this->checkBox2->Visible = false;
@@ -801,6 +800,12 @@ namespace CppWinForm1 {
 					this->label1->Text = Convert::ToString("HashTableList");
 					this->checkBox5->Checked = false;
 				}
+				else if (this->checkBox6->Checked == true)
+				{
+					tabl = new TBalanceTreeTable;
+					this->label1->Text = Convert::ToString("BalanceTreeTable");
+					this->checkBox6->Checked = false;
+				}
 				std::string random = msclr::interop::marshal_as<std::string>(this->textBox8->Text);
 				std::string start = msclr::interop::marshal_as<std::string>(this->textBox5->Text);
 				std::string finish = msclr::interop::marshal_as<std::string>(this->textBox6->Text);
@@ -866,7 +871,20 @@ private: System::Void timer4_Tick(System::Object^ sender, System::EventArgs^ e) 
 						tmp->PrintTree(fileTree);
 					tmp = NULL;
 				}
-				
+				TBalanceTreeTable* bal= dynamic_cast<TBalanceTreeTable*>(tabl);
+				if (bal != NULL)
+				{
+					std::string sTree = "";
+					for (int i = 0; s[i] != '.'; i++)
+					{
+						sTree += s[i];
+					}
+					sTree += "BalanceTree.txt";
+					std::ofstream fileTree(sTree);
+					if (fileTree)
+						bal->PrintTree(fileTree);
+					bal = NULL;
+				}
 			}
 			if (this)
 			{

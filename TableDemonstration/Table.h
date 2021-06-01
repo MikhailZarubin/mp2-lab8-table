@@ -17,6 +17,12 @@ const int DEL = -2;
 const int PrintTreeStep = 3;
 const std::size_t START_SIZE = 10;
 const std::size_t BUFF_SIZE = 20;
+const int HeightOK = 0;
+const int HeightInc = 1;
+const int HeightDec = -1;
+const int BalOK = 0;
+const int BalLeft = -1;
+const int BalRight = 1;
 
 //resource classes
 class TRecord {
@@ -45,10 +51,12 @@ public:
 class TNode{
 protected:
 	TRecord rec;
-	int height, level;
+	int height, level, balance;
 public:
 	int GetHeight() const;
 	int GetLevel() const;
+	int GetBalance() const;
+	void InsBalance(int bal);
 	void InsHeight(int h);
 	void InsLevel(int l);
 	TNode();
@@ -139,6 +147,23 @@ public:
 	bool IsEnd() override;
 	TRecord GetCurr() override;
 	void PrintTree(std::ofstream& ofs);
+};
+//
+class TBalanceTreeTable : public TTreeTable
+{
+protected:
+
+	int InsBalanceTree(TNode*& pNode, TKey k, TVal v);
+	int LeftTreeBalancing(TNode*& pNode);
+	int RightTreeBalancing(TNode*& pNode);	
+	int DelBalanceTree(TNode*& pNode, TKey k);
+	int DelMin(TNode*& pNode);
+	TNode* FindMin(TNode* pNode);
+
+public:
+	TBalanceTreeTable() : TTreeTable() {}
+	bool Insert(const TRecord& rec) override;
+	bool Delete(const TKey& key) override;
 };
 //
 class THashTableStep : public TTable

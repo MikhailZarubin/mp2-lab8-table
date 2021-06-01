@@ -678,6 +678,7 @@ TNode::TNode()
 	rec.InsRec(0, 0);
 	pLeft = pRight = NULL;
 	height = level = 0;
+	balance = BalOK;
 }
 TNode::TNode(TRecord r, TNode* pl, TNode* pr)
 {
@@ -685,6 +686,7 @@ TNode::TNode(TRecord r, TNode* pl, TNode* pr)
 	pLeft = pl;
 	pRight = pr;
 	height = level = 0;
+	balance = BalOK;
 }
 TRecord TNode::GetRec() const
 {
@@ -702,6 +704,10 @@ int TNode::GetLevel()const
 {
 	return level;
 }
+int TNode::GetBalance() const
+{
+	return balance;
+}
 void TNode::InsHeight(int h)
 {
 	height = h;
@@ -709,6 +715,10 @@ void TNode::InsHeight(int h)
 void TNode::InsLevel(int l)
 {
 	level = l;
+}
+void TNode::InsBalance(int bal)
+{
+	balance = bal;
 }
 //TTreeTable metods
 TTreeTable::TTreeTable()
@@ -922,7 +932,6 @@ void TTreeTable::PrintTree(std::ofstream& ofs)
 			st.pop();
 		pRoot->InsLevel(4*DataCount);
 		st.push(pRoot);
-		int tmp = (log(DataCount) + 2);
 		while (!st.empty())
 		{
 			pCurr = st.top();
@@ -931,13 +940,16 @@ void TTreeTable::PrintTree(std::ofstream& ofs)
 			if (pCurr->pLeft)
 			{
 				pCurr->pLeft->InsHeight(pCurr->GetHeight() + 1);
-				pCurr->pLeft->InsLevel(pCurr->GetLevel() - PrintTreeStep - std::max(0, (tmp - pCurr->pLeft->GetHeight())));
+				pCurr->pLeft->InsLevel(pCurr->GetLevel() - PrintTreeStep - DataCount / (pCurr->pLeft->GetHeight()));
 				st.push(pCurr->pLeft);
 			}
 			if (pCurr->pRight)
 			{
 				pCurr->pRight->InsHeight(pCurr->GetHeight() + 1);
-				pCurr->pRight->InsLevel(pCurr->GetLevel() + PrintTreeStep + std::max(0, (tmp - pCurr->pRight->GetHeight())));
+				if (pCurr == pRoot)
+					pCurr->pRight->InsLevel(pCurr->GetLevel() + DataCount);
+				else
+					pCurr->pRight->InsLevel(pCurr->GetLevel() + PrintTreeStep + DataCount / (pCurr->pRight->GetHeight()));
 				st.push(pCurr->pRight);
 			}
 		}
@@ -986,4 +998,264 @@ void TTreeTable::PrintTree(std::ofstream& ofs)
 			ofs << '\n';
 		}
 	}
+}
+//TBalanceTreeTable metods
+int TBalanceTreeTable::InsBalanceTree(TNode* &pNode, TKey k, TVal v)
+{
+	Eff++;
+	int HeightIndex = HeightOK;
+	if (!pNode)
+	{
+		TRecord tmp(k, v);
+		pNode = new TNode(tmp);
+		HeightIndex = HeightInc;
+		DataCount++;
+	}
+	else if (k < pNode->GetRec().GetKey())
+	{
+		if (InsBalanceTree(pNode->pLeft, k, v) == HeightInc)
+		{
+			HeightIndex = LeftTreeBalancing(pNode);
+		}
+	}
+	else if (k > pNode->GetRec().GetKey())
+	{
+		if (InsBalanceTree(pNode->pRight, k, v) == HeightInc)
+		{
+			HeightIndex = RightTreeBalancing(pNode);
+		}
+	}
+	else
+	{
+		HeightIndex = HeightOK;
+	}
+	return HeightIndex;
+}
+int TBalanceTreeTable::LeftTreeBalancing(TNode* &pNode)
+{
+	Eff++;
+	int HeightIndex = HeightOK;
+	switch (pNode->GetBalance())
+	{
+	case BalRight:
+		pNode->InsBalance(BalOK);
+		HeightIndex = HeightOK;
+		break;
+	case BalOK:
+		pNode->InsBalance(BalLeft);
+		HeightIndex = HeightInc;
+		break;
+	case BalLeft:
+		TNode* p1, * p2;
+		if (pNode->pLeft)
+		{
+			p1 = pNode->pLeft;
+			if (p1->GetBalance() == BalLeft)
+			{
+				pNode->pLeft = p1->pRight;
+				p1->pRight = pNode;
+				pNode->InsBalance(BalOK);
+				pNode = p1;
+			}
+			else
+			{
+				if (p1->pRight)
+				{
+					p2 = p1->pRight;
+					p1->pRight = p2->pLeft;
+					p2->pLeft = p1;
+					pNode->pLeft = p2->pRight;
+					p2->pRight = pNode;
+					if (p2->GetBalance() == BalLeft)
+						pNode->InsBalance(BalRight);
+					else
+						pNode->InsBalance(BalOK);
+					if (p2->GetBalance() == BalRight)
+						pNode->InsBalance(BalLeft);
+					else
+						p1->InsBalance(BalOK);
+					pNode = p2;
+				}
+			}
+		}
+		pNode->InsBalance(BalOK);
+		HeightIndex = HeightOK;
+	}
+	return HeightIndex;
+}
+int TBalanceTreeTable::RightTreeBalancing(TNode*& pNode)
+{
+	Eff++;
+	int HeightIndex = HeightOK;
+	switch (pNode->GetBalance())
+	{
+	case BalLeft:
+		pNode->InsBalance(BalOK);
+		HeightIndex = HeightOK;
+		break;
+	case BalOK:
+		pNode->InsBalance(BalRight);
+		HeightIndex = HeightInc;
+		break;
+	case BalRight:
+		TNode* p1, * p2;
+		if (pNode->pRight)
+		{
+			p1 = pNode->pRight;
+			if (p1->GetBalance() == BalRight)
+			{
+				pNode->pRight = p1->pLeft;
+				p1->pLeft = pNode;
+				pNode->InsBalance(BalOK);
+				pNode = p1;
+			}
+			else
+			{
+				if (p1->pLeft)
+				{
+					p2 = p1->pLeft;
+					p1->pLeft = p2->pRight;
+					p2->pRight = p1;
+					pNode->pRight = p2->pLeft;
+					p2->pLeft = pNode;
+					if (p2->GetBalance() == BalRight)
+						pNode->InsBalance(BalLeft);
+					else
+						pNode->InsBalance(BalOK);
+					if (p2->GetBalance() == BalLeft)
+						pNode->InsBalance(BalRight);
+					else
+						p1->InsBalance(BalOK);
+					pNode = p2;
+				}
+			}
+		}
+		pNode->InsBalance(BalOK);
+		HeightIndex = HeightOK;
+	}
+	return HeightIndex;
+}
+int TBalanceTreeTable::DelBalanceTree(TNode*& pNode, TKey k)
+{
+	Eff++;
+	int HeightIndex = HeightOK;
+	if (!pNode)
+	{
+		HeightIndex = HeightOK;
+	}
+	else
+	{
+		if (k < pNode->GetRec().GetKey())
+		{
+			if (DelBalanceTree(pNode->pLeft, k) != HeightOK)
+			{
+				HeightIndex = RightTreeBalancing(pNode);
+			}
+		}
+		else
+		{
+			if (k > pNode->GetRec().GetKey())
+			{
+				if (DelBalanceTree(pNode->pRight, k) != HeightOK)
+				{
+					HeightIndex = LeftTreeBalancing(pNode);
+				}
+			}
+			else
+			{
+				DataCount--;
+				if (pNode->pLeft == NULL && pNode->pRight == NULL)
+				{
+					delete pNode;
+					pNode = NULL;
+					HeightIndex = HeightDec;
+				}
+				else if (pNode->pLeft != NULL && pNode->pRight == NULL)
+				{
+					pNode->InsRec(pNode->pLeft->GetRec()); 
+					pNode->InsBalance(BalOK);
+					HeightIndex = HeightDec;
+					delete pNode->pLeft;
+					pNode->pLeft = NULL;
+				}
+				else if (pNode->pLeft == NULL && pNode->pRight != NULL)
+				{
+					pNode->InsRec(pNode->pRight->GetRec());
+					pNode->InsBalance(BalOK);
+					HeightIndex = HeightDec;
+					delete pNode->pRight;
+					pNode->pRight = NULL;
+				}
+				else
+				{
+					TNode* l = pNode->pLeft;
+					TNode* r = pNode->pRight;
+					TNode* min = FindMin(r);
+					HeightIndex = DelMin(r);
+					pNode->InsRec(min->GetRec()); 
+					delete min;
+					pNode->pLeft = l;
+					pNode->pRight = r;
+					if (HeightIndex != HeightOK)
+					{
+						HeightIndex = LeftTreeBalancing(pNode);
+					}
+				}
+			}
+		}
+	}
+	return HeightIndex;
+}
+int TBalanceTreeTable:: DelMin(TNode*& pNode)
+{
+	Eff++;
+	int HeightIndex = HeightOK;
+	if (!pNode->pLeft)
+	{
+		pNode = pNode->pRight;
+		HeightIndex = HeightDec;
+	}
+	else
+	{
+		if (DelMin(pNode->pLeft) != HeightOK)
+		{
+			HeightIndex = RightTreeBalancing(pNode);
+		}
+	}
+	return HeightIndex;
+}
+TNode* TBalanceTreeTable::FindMin(TNode* pNode)
+{
+	while (pNode->pLeft)
+	{
+		Eff++;
+		pNode = pNode->pLeft;
+	}
+	return pNode;
+}
+bool TBalanceTreeTable::Insert(const TRecord& rec)
+{
+	if (IsFull())
+	{
+		throw DataCount;
+	}
+	int data = DataCount;
+	InsBalanceTree(pRoot, rec.GetKey(), rec.GetVal());
+	if (DataCount == data)
+		return false;
+	else
+		return true;
+}
+bool TBalanceTreeTable::Delete(const TKey& key)
+{
+	if (IsEmpty())
+	{
+		throw 0;
+	}
+	int data = DataCount;
+	DelBalanceTree(pRoot, key);
+	if (DataCount == data)
+		return false;
+	else
+		return true;
 }

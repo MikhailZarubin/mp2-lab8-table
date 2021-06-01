@@ -685,3 +685,101 @@ TEST(TreeTable, delete_a_nonexistent_record_in_TreeTable_will_return_the_false)
 	EXPECT_EQ(t.Delete(r1.GetKey()), false);
 	EXPECT_EQ(t.GetData(), 1);
 }
+//
+TEST(BalanceTreeTable, can_create_BalanceTreeTable)
+{
+	ASSERT_NO_THROW(TBalanceTreeTable t);
+}
+
+TEST(BalanceTreeTable, can_insert_record_in_no_full_BalanceTreeTable)
+{
+	TBalanceTreeTable t;
+	TRecord r;
+	ASSERT_NO_THROW(t.Insert(r));
+}
+TEST(BalanceTreeTable, can_find_record_in_BalanceTreeTable)
+{
+	TBalanceTreeTable t;
+	TRecord r;
+	ASSERT_NO_THROW(t.Find(r.GetKey()));
+}
+TEST(BalanceTreeTable, can_delete_record_in_no_empty_BalanceTreeTable)
+{
+	TBalanceTreeTable t;
+	TRecord r;
+	t.Insert(r);
+	ASSERT_NO_THROW(t.Delete(r.GetKey()));
+}
+
+TEST(BalanceTreeTable, can_not_delete_in_empty_BalanceTreeTable)
+{
+	TBalanceTreeTable t;
+	TRecord r;
+	ASSERT_ANY_THROW(t.Delete(r.GetKey()));
+}
+TEST(BalanceTreeTable, can_crawl_an_empty_BalanceTreeTable)
+{
+	TBalanceTreeTable t;
+	ASSERT_NO_THROW(for (t.Reset(); !t.IsEnd(); t.GoNext()) t.GetCurr(););
+}
+TEST(BalanceTreeTable, can_crawl_a_non_empty_BalanceTreeTable)
+{
+	TBalanceTreeTable t;
+	TRecord rec1(20, 5), rec2(180, 5), rec3(50, 5);
+	t.Insert(rec1);
+	t.Insert(rec2);
+	t.Insert(rec3);
+	ASSERT_NO_THROW(for (t.Reset(); !t.IsEnd(); t.GoNext()) t.GetCurr(););
+}
+TEST(BalanceTreeTable, find_for_an_existing_record_in_BalanceTreeTable_will_return_the_true)
+{
+	TBalanceTreeTable t;
+	TRecord r;
+	t.Insert(r);
+	EXPECT_EQ(t.GetData(), 1);
+	EXPECT_EQ(t.Find(r.GetKey()), true);
+	EXPECT_EQ(t.GetData(), 1);
+}
+TEST(BalanceTreeTable, find_for_a_nonexistent_record_in_BalanceTreeTable_will_return_the_false)
+{
+	TBalanceTreeTable t;
+	TRecord r;
+	EXPECT_EQ(t.GetData(), 0);
+	EXPECT_EQ(t.Find(r.GetKey()), false);
+	EXPECT_EQ(t.GetData(), 0);
+}
+TEST(BalanceTreeTable, insert_a_nonexistent_record_in_BalanceTreeTable_will_return_the_true)
+{
+	TBalanceTreeTable t;
+	TRecord r;
+	EXPECT_EQ(t.GetData(), 0);
+	EXPECT_EQ(t.Insert(r), true);
+	EXPECT_EQ(t.GetData(), 1);
+}
+TEST(BalanceTreeTable, insert_an_existing_record_in_BalanceTreeTable_will_return_the_false)
+{
+	TBalanceTreeTable t;
+	TRecord r;
+	t.Insert(r);
+	EXPECT_EQ(t.GetData(), 1);
+	EXPECT_EQ(t.Insert(r), false);
+	EXPECT_EQ(t.GetData(), 1);
+}
+TEST(BalanceTreeTable, delete_an_existing_record_in_BalanceTreeTable_will_return_the_true)
+{
+	TBalanceTreeTable t;
+	TRecord r;
+	t.Insert(r);
+	EXPECT_EQ(t.GetData(), 1);
+	EXPECT_EQ(t.Delete(r.GetKey()), true);
+	EXPECT_EQ(t.GetData(), 0);
+}
+TEST(BalanceTreeTable, delete_a_nonexistent_record_in_BalanceTreeTable_will_return_the_false)
+{
+	TBalanceTreeTable t;
+	TRecord r, r1(5, 6);
+	t.Insert(r);
+	EXPECT_EQ(t.GetData(), 1);
+	EXPECT_EQ(t.Delete(r1.GetKey()), false);
+	EXPECT_EQ(t.GetData(), 1);
+}
